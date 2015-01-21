@@ -1,0 +1,11 @@
+#how to create encounter histories from week 1 lab for Program Mark analysis
+
+dat <- read.csv('snakes.csv')
+dat$count <- 1
+dat$year <- ordered(dat$year)
+library(reshape)
+
+
+cdat <- cast(id ~ day + year, data=dat)
+
+cdat[is.na(cdat)] <- 0
