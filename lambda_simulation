@@ -1,0 +1,49 @@
+#####################################################
+#lambda varies over time
+#####################################################
+
+low <- as.data.frame(matrix(ncol=50, nrow=200))
+high <- as.data.frame(matrix(ncol=50, nrow=200))
+
+t <- seq(1,200,by=1)
+N0 <- 50
+
+for(i in 1:200){
+	lambda <- rnorm(n=200, mean=1.05,sd=.1)
+	low[,i] <- N0*(lambda^t)	
+}
+low$median <- apply(low, 2, median)
+low$mean <- rowMeans(low[,1:20])
+
+for(i in 1:200){
+	lambda <- rnorm(n=200, mean=1.05,sd=.3)
+	high[,i] <- N0*(lambda^t)	
+}
+high$median <- apply(high, 2, median)
+high$mean <- rowMeans(high[,1:20])
+
+#generate the arith mean
+lambda <- rep(1.05,200)
+t <- seq(1,200,by=1)
+arith <- N0*(lambda^t)
+
+par(mfcol=c(3,1))
+
+#plot just the low 
+plot(low[,1],ylim=c(0,2000000) ,xlim=c(0,100),  type="l")
+for(i in 2:20){
+lines(low[,i], type="l")
+}
+
+#plot just the high 
+plot(high[,1],ylim=c(0,2000000),xlim=c(0,100), type="l")
+for(i in 2:20){
+lines(high[,i], type="l")
+}
+
+# plot the means
+plot(arith,ylim=c(0,20000), xlim=c(0,100), col="red", type="l", lwd=3)
+lines(high$mean,  col="orange",lwd=3)
+lines(low$mean,  col="green", lwd=3)
+lines(high$median,  col="orange",lwd=3)
+lines(low$median,  col="green", lwd=3)
