@@ -1,0 +1,164 @@
+options(scipen=999)
+
+lambda <- 1
+lambda2 <- 1.1
+lambda3 <- 1.2
+lambda4 <- 1.3
+lambda5 <- 1.4
+
+N0 <- 1
+
+t <- seq(1,100,by=1)
+
+Nt <- N0*lambda^t
+Nt2 <- N0*lambda2^t
+Nt3 <- N0*lambda3^t
+Nt4 <- N0*lambda4^t
+Nt5 <- N0*lambda5^t
+
+png("lambda_graph.png")
+plot(Nt, ylim=c(0,10000), col="red")
+points(Nt2, type="p", col="orange")
+points(Nt3, type="p", col="green")
+points(Nt4, type="p", col="blue")
+points(Nt5, type="p", col="purple")
+dev.off()
+
+lnN <- log(Nt)
+lnN2 <- log(Nt2)
+lnN3 <- log(Nt3)
+lnN4 <- log(Nt4)
+lnN5 <- log(Nt5)
+
+png("ln_lambda_graph.png")
+plot(lnN, ylim=c(0,50), col="red")
+points(lnN2, type="p", col="orange")
+points(lnN3, type="p", col="green")
+points(lnN4, type="p", col="blue")
+points(lnN5, type="p", col="purple")
+dev.off()
+
+# III - For Loops
+
+initsize=4
+popsize=rep(0,10)
+popsize[1] <- initsize
+
+for(n in 2:10) {
+	popsize[n]=2*popsize[n-1]
+	x=log(popsize[n])
+	cat(n,x,"\n")
+}
+
+plot(1:10, popsize, type="l")
+
+p <- rep(0,5)
+for (init in c(1,5,9)){
+	p[1] = init
+		for (n in 2:5){
+			p[n]=2*p[n-1]
+			cat(init,n,p[n],"\n")
+}
+}
+
+## for loop excercise
+
+lambda <- seq(.09,2,by=.1)
+N0 <- 1
+Nt <- as.data.frame(matrix(ncol=20, nrow=100))
+
+for(t in 1:100){
+	Nt[t,] <- N0*lambda^t
+}
+
+plot(Nt[,1], ylim=c(0,100), col="red", type="l")
+for(i in 2:20){
+lines(Nt[,i], type="l")
+}
+
+### IV - A Challenge for those already comfortable with R
+
+lowmean <- 1.05
+lowsd <- 0.1
+highmean <- 1.05
+highsd <- .5
+
+low <- as.data.frame(matrix(ncol=50, nrow=100))
+high <- as.data.frame(matrix(ncol=50, nrow=100))
+
+N0 <- 1
+lambdalow <- rnorm(n=50, mean=1.05,sd=.1)
+lambdahigh <- rnorm(n=50,mean=1.05,sd=.5)
+
+for(t in 1:100){
+	low[t,] <- N0*lambdalow^t	
+}
+low$mean <- rowMeans(low)
+
+#plot just the low means
+plot(low[,1], ylim=c(0,100), col="red", type="l")
+for(i in 2:20){
+lines(low[,i], type="l")
+}
+
+# generate the high mean
+for(t in 1:100){
+	high[t,] <- N0*lambdahigh^t
+}
+high$mean <- rowMeans(high)
+
+
+
+
+plot(low$mean, ylim=c(0,1000), col="red")
+points(high$mean, ylim=c(0,1000), col="orange")
+points(arith, ylim=c(0,1000), col="green")
+
+#####################################################
+#lambda varies over time
+#####################################################
+
+low <- as.data.frame(matrix(ncol=50, nrow=50))
+high <- as.data.frame(matrix(ncol=50, nrow=50))
+
+t <- seq(1,50,by=1)
+N0 <- 1
+
+for(i in 1:50){
+	lambdalow <- rnorm(n=50, mean=1.05,sd=.01)
+	low[,i] <- N0*lambdalow^t	
+}
+low$mean <- rowMeans(low)
+
+for(i in 1:50){
+	lambdahigh <- rnorm(n=50, mean=1.05,sd=.02)
+	high[,i] <- N0*lambdahigh^t	
+}
+high$mean <- rowMeans(high)
+
+#generate the arith mean
+lambda <- 1.05
+t <- seq(1,50,by=1)
+arith <- N0*lambda^t
+
+par(mfcol=c(3,1))
+
+#plot just the low 
+plot(low[,1], ylim=c(0,30),  type="l")
+for(i in 2:20){
+lines(low[,i], type="l")
+}
+
+#plot just the high 
+plot(high[,1], ylim=c(0,30), type="l")
+for(i in 2:20){
+lines(high[,i], type="l")
+}
+
+# plot the means
+plot(arith, ylim=c(0,20), col="red", type="l", lwd=3)
+lines(high$mean, ylim=c(0,20), col="orange",lwd=3)
+lines(low$mean, ylim=c(0,20), col="green", lwd=3)
+
+
+
