@@ -12,9 +12,9 @@ highsd <- .3     ### SD of lambda high
 ###########################################################################
 high <- data.frame(matrix(ncol=pop, nrow=iter))  
 high[1,] <- N0 
-lamda<-matrix(data=rnorm(n=pop*iter, mean=lmean,sd=highsd),nrow=iter,ncol=pop)
+#lamda<-matrix(data=rnorm(n=pop*iter, mean=lmean,sd=highsd),nrow=iter,ncol=pop)
 for(i in 1:(iter-1)){
-  high[(i+1),]<-high[i,]*lamda[i,]
+  high[(i+1),]<-high[i,]*rnorm(n=pop*iter, mean=lmean,sd=highsd)
   
   ###################################
   ##            clock              ##
@@ -28,9 +28,8 @@ for(i in 1:(iter-1)){
 
 low <- data.frame(matrix(ncol=pop, nrow=iter))  
 low[1,] <- N0 
-lamda<-matrix(data=rnorm(n=pop*iter, mean=lmean,sd=lowsd),nrow=iter,ncol=pop)
 for(i in 1:(iter-1)){
-  low[(i+1),]<-low[i,]*lamda[i,]
+  low[(i+1),]<-low[i,]*rnorm(n=pop*iter, mean=lmean,sd=lowsd)
   
   ###################################
   ##            clock              ##
@@ -47,10 +46,11 @@ low$mean <- rowMeans(low)
 high$mean <- rowMeans(high)
 
 #generate the arith mean
-lambda <- rep(1.05,100)
+lambda <- 1.05
 time <- seq(1,100,by=1)
 arith <- N0*(lambda^time)
 
+png("3_plot_lambda.png")
 par(mfcol=c(3,1))
 
 #plot low 
@@ -68,7 +68,9 @@ for(i in 2:10){
 # plot means
 plot(arith, col="red", type="l", lwd=3)
 lines(high$mean,  col="orange",lwd=3)
-lines(low$mean,  col="green", lwd=3)
+lines(low$mean,  col="blue", lwd=3)
+title(main="Red = Arithmetic, Orange = High, Blue = Low")
+dev.off()
 
 print(paste0(sum(apply(as.data.frame(high<1),2,sum)>0),' high SD populations have crashed'))
 print(paste0(sum(apply(as.data.frame(low <1),2,sum)>0),' low SD populations have crashed'))
