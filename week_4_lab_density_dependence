@@ -1,0 +1,77 @@
+###########
+# Week 4 Lab Population Ecology
+###########
+
+### Simulating Populations with Density Dependence
+years <- 500
+r <- matrix(ncol=3, nrow=years)
+r[,1] <- 1.9
+r[,2] <- 2.2
+r[,3] <- 2.5
+
+
+N0 <- 50
+K <- 1000
+Nhat <- matrix(ncol=3, nrow=years)
+
+Nhat[1,] <- N0
+
+for(i in 2:years){
+Nhat[i,] <- Nhat[i-1,]*exp(r[1,]*(1-(Nhat[i-1,]/K)))
+}
+
+plot(r[400:500,],Nhat[400:500,], col="black",pch=20,cex=1)
+
+
+###########second page###########
+## vary r from 1.8 to 3.5 by a tiny time step and plot two graphs, one looking at the big picture 
+## and one at the small
+
+years=1500
+rs <- seq(1.8, 3.5, by=0.001)
+r <- matrix(ncol=length(rs), nrow=years)
+for(i in 1:length(rs)){
+	r[,i]<-rs[i]
+   }
+N0 <- 50
+K=1000
+Nhat <- matrix(ncol=length(rs), nrow=years)
+
+Nhat[1,]<-N0
+
+for(i in 2:years){
+Nhat[i,] <- Nhat[i-1,]*exp(r[1,]*(1-(Nhat[i-1,]/K)))
+}
+
+
+par(mfcol=c(2,1))
+plot(r[1200:years,],Nhat[1200:years,])
+plot(r[150:300,],Nhat[150:300,], xlim=c(2.65,2.75))
+
+
+###########
+#Challenge
+##########
+
+#add in a theta variable, a variable one and then graph how theta impact Nhat with variable r
+
+years=1500
+iter=100
+rs <- seq(1.8, 3.5, by=0.01)
+r <- matrix(ncol=length(rs), nrow=years)
+for(i in 1:length(rs)){
+	r[,i]<-rs[i]
+   }
+N0 <- 50
+K <- 1000
+Nhat <- matrix(ncol=length(rs), nrow=years)
+
+Nhat[1,]<-N0
+
+par(mfcol=c(3,2))
+for(theta in c(.5,.8,1,1.3,1.5)){
+	for(i in 2:years){
+		Nhat[i,] <- Nhat[i-1,]*exp(r[1,]*(1-(Nhat[i-1,]/K)^theta))
+		}
+	plot(r[1000:years,],Nhat[1000:years,], main=theta)
+}
