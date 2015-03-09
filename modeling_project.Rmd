@@ -1,0 +1,106 @@
+---
+output: html_document
+---
+
+# Resident Canada Geese Vital Rates in the SE United States
+# Auriel M.V. Fournier
+# Population Ecology Modeling Project
+
+## Background
+
+Canada Geese (*Branta canadensis*) have made a large comeback across much of the southern U.S in recent years (CITATION). Some of these individuals have become resident birds, and no longer regularly migrate along with the rest of the Canada Goose population every year. Resident birds create a special management concern for southern states because they often live in urban/suburban areas and cause human/wildlife conflicts. The Arkansas Game and Fish Commission had been banding Canada Geese in Arkansas during the summer (when only resident geese are present) for ~20 years, and wants to determine if the liberalized hunting regulations of early season (September) Canada geese have had an impact on the populations of resident Canada Geese in Arkansas. 
+
+## Model Description
+
+My original plan, and still longer term plan, is to analyze these results in a live-dead recapture model in RMark/Program Mark. That part of the analysis has been put on hold for the moment, so instead I here present the Lincoln-Peterson results from the capture/recapture data from 2006-2011 and will examine vital rates from other southern resident goose populations to determine what might be driving the population dynamics of the Arkansas population. 
+
+## Results and Figures
+
+```{r, echo=F}
+library(ggplot2)
+library(grid)
+```
+
+```{r}
+setwd("~/GitHub/RMark")
+dat <- read.csv("cago_cap_history.csv")
+Nhat <- as.data.frame(matrix(ncol=2, nrow=(2011-2005)))
+Nhat[,1] <- seq(2006,2011)
+```
+
+Resulting equation is captures in year i times captures in year i+1 divided by the number of birds captured in both years
+
+```{r}
+for(i in 1:6){
+    Nhat[i,2] <- (sum(dat[,(i+3)])+1)* # captures in year i + 3
+                  (sum(dat[,(i+4)])+1)/ # captures in year i + 4
+                    (sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0))+1) # captures which were captured in both years
+}
+
+for(i in 1:6){
+  Nhat[i,3] <- ((sum(dat[,(i+3)])+1)*
+                (sum(dat[,(i+4)])+1)*
+                  (sum(dat[,(i+3)])-sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0)))*
+                    (sum(dat[,(i+4)])+1)-sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0)))/
+                        (((sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0))+1)^2)*(sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0))+2))
+}
+
+Nhat
+```
+
+```{r, echo=F}
+options(scipen=999)
+ggplot()+
+  geom_point(data=Nhat, aes(x=V1, y=V2))+
+  geom_line(data=Nhat, aes(x=V1, y=V2))+
+  geom_line(data=Nhat, aes(x=V1, y=V3))+
+  geom_line(data=Nhat, aes(x=V1, y=-V3))+
+  #ylim(0,40000)+
+  xlab("year")+
+  ylab("Resident Canada \nGeese in Arkansas")+
+  theme(plot.title = element_text(colour="black",size=20), #plot title
+        axis.text.x = element_text(ang=90, colour="black", size=20), #x axis labels
+        axis.text.y = element_text(colour="black",size=20), #y axis labels
+        axis.title.x = element_text(colour="black",size=20),
+        axis.title.y = element_text(colour="black",size=20), #y ,axis title
+        legend.text = element_text(colour="black", size=20), #legend text
+        legend.title = element_blank(),#legend title
+        legend.background = element_rect(fill="white"), #legend background color
+        legend.position = "top",
+        legend.direction= "horizontal",
+        legend.key = element_rect(colour="black", fill="white"),
+        legend.key.width=unit(3,"cm"),
+        plot.background = element_rect(fill = "white" ), #plot background color
+        panel.grid.major= element_line(colour=NA), 
+        panel.grid.minor=element_line(colour=NA),
+        panel.background = element_rect(fill = "white"),
+        axis.line=element_line(colour="black"))
+
+```
+
+As you can see, while the estimates seem logical and consistent among years, the standard errors are quite large. S while our estimates suggest that resident Canada geese are relatively consistent through time and did not change after the 2007 liberalization of hunting regulations, it is quite possible that literally any other pattern could have been observed (strong increase, strong decrease, etc, etc). 
+
+So for the moment, due to other collaborators on this project wanting to wait to take this forward, we are going to examine the vital rates of resident Canada Geese in Georgia and compare these rates between rural and urban geese (data from [@Balkcom]). I would expect that geese in urban situations will have higher survival because they are not exposed to hunting mortality. There could be other sources of mortality in urban situations though that are not present in rural environments. 
+
+Urban goose survival = .958 +/- .020
+Rural goose survival = .682 +/- .682
+
+Site fidelity (.238 - .726) [@Rhodes et al 1998]
+
+Sit fidelity of residents in TN .50 [Combs 2004]
+
+Even when 22-25% of the population is harvested population growth is not diminished [@Heusmann 1999]
+
+In other states (GA, PA, others) additional hunting seasons have not been found to control the resident Canada Goose problem because urban geese, which make up most of resident goose populations, are not exposed to hunting pressure. 
+
+> 'Hunting oppurtunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@ Balkcom]
+
+
+
+
+## Conclusions
+
+## References
+
+## Appendix - R Code
+
