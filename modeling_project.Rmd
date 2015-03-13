@@ -22,7 +22,7 @@ library(grid)
 ```
 
 ```{r}
-setwd("~/GitHub/RMark")
+setwd("~/RMark")
 dat <- read.csv("cago_cap_history.csv")
 Nhat <- as.data.frame(matrix(ncol=2, nrow=(2011-2005)))
 Nhat[,1] <- seq(2006,2011)
@@ -95,7 +95,115 @@ In other states (GA, PA, others) additional hunting seasons have not been found 
 
 > 'Hunting oppurtunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@ Balkcom]
 
+3.9 birds per brood (Williams and Marshall 1938)
 
+.97 = daily survival during first 14 days (Eberhardt, Anthony and Rickard 1989)
+.995 = survival during the next 56 days
+.491 = 70 day survival period
+
+
+25% of 2 year olds raised 2.3 young (Raveling 1981)
+31% of 3 year olds raised 2.9
+58% of 5+ railed 3.7 young 
+
+geese 4+ were about 26% of the population
+
+25% adoption in first week ()
+
+some pairs that don't reproduce, raise young, but have lower survival
+
+survival by week (table 6)
+
+neckbands reduce survival (82 vs 67) (Castelli and Trost 1996)
+
+```{r}
+
+
+mat <- matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
+
+v <- matrix(nrow=4, ncol=100)
+
+v[,1]<- c(20000*.25,20000*.25,20000*.24,20000*.26)
+
+for(i in 1:99){
+
+  v[,i+1] <- mat %*% v[,i]
+
+}
+
+col <- colSums(v)
+
+eigens=eigen(mat)
+
+lambda=eigens$values[1] #stable lambda
+c=eigens$vectors[,1]/sum(eigens$vectors[,1]) # stable age distribution
+
+
+
+
+##
+lambdap0 <- matrix(nrow=1, ncol=21)
+unip0 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,unip0[i],0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
+eigenp0 <- eigen(mat)
+lambdap0[i] <- eigenp0$values[1]
+}
+plot(unip0, lambdap0)
+
+lambdap1 <- matrix(nrow=1, ncol=21)
+unip1 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,unip1[i],0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
+eigenp1 <- eigen(mat)
+lambdap1[i] <- eigenp1$values[1]
+}
+plot(unip1, lambdap1)
+
+
+lambdap2 <- matrix(nrow=1, ncol=21)
+unip2 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,.31*3.9, 0,0,unip2[i],.58*3.7,0,0,.958),ncol=4)
+eigenp2 <- eigen(mat)
+lambdap2[i] <- eigenp2$values[1]
+}
+plot(unip2, lambdap2)
+
+# matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4) 
+lambdap3 <- matrix(nrow=1, ncol=21)
+unip3 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,unip3[i]*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+eigenp3 <- eigen(mat)
+lambdap3[i] <- eigenp3$values[1]
+}
+plot(unip3, lambdap3)
+
+
+
+lambdap4 <- matrix(nrow=1, ncol=21)
+unip4 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,unip4[i]*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+eigenp4 <- eigen(mat)
+lambdap4[i] <- eigenp4$values[1]
+}
+plot(unip4, lambdap4)
+
+
+
+lambdap5 <- matrix(nrow=1, ncol=21)
+unip5 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,unip5[i]*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+eigenp5 <- eigen(mat)
+lambdap5[i] <- eigenp5$values[1]
+}
+plot(unip5, lambdap5)
+
+
+```
 
 
 ## Conclusions
