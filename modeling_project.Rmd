@@ -1,5 +1,6 @@
 ---
-output: html_document
+bibliography: model_project.bib
+output: pdf_document
 ---
 
 # Resident Canada Geese Vital Rates in the SE United States
@@ -8,62 +9,87 @@ output: html_document
 
 ## Background
 
-Canada Geese (*Branta canadensis*) have made a large comeback across much of the southern U.S in recent years (CITATION). Some of these individuals have become resident birds, and no longer regularly migrate along with the rest of the Canada Goose population every year. Resident birds create a special management concern for southern states because they often live in urban/suburban areas and cause human/wildlife conflicts. The Arkansas Game and Fish Commission had been banding Canada Geese in Arkansas during the summer (when only resident geese are present) for ~20 years, and wants to determine if the liberalized hunting regulations of early season (September) Canada geese have had an impact on the populations of resident Canada Geese in Arkansas. 
+Canada Geese (*Branta canadensis*) have made a large comeback across much of the southern U.S in recent years [@Balkcom2010]. Some of these individuals have become resident birds, and no longer regularly migrate along with the rest of the Canada Goose population every year. Resident birds create a special management concern for southern states because they often live in urban/suburban areas and cause human/wildlife conflicts. The Arkansas Game and Fish Commission had been banding Canada Geese in Arkansas during the summer (when only resident geese are present) for ~20 years, and wants to determine if the liberalized hunting regulations of early season (September) Canada geese have had an impact on the populations of resident Canada Geese in Arkansas. 
 
 ## Model Description
 
-My original plan, and still longer term plan, is to analyze these results in a live-dead recapture model in RMark/Program Mark. That part of the analysis has been put on hold for the moment, so instead I here present the Lincoln-Peterson results from the capture/recapture data from 2006-2011 and will examine vital rates from other southern resident goose populations to determine what might be driving the population dynamics of the Arkansas population. 
+My original plan, and still longer term plan, is to analyze these results in a live-dead recapture model in RMark/Program Mark [@Laake2013; @White1999a]. That part of the analysis has been put on hold for the moment by the other members of the project, so instead I here present the Lincoln-Peterson results from the capture/recapture data from 2006-2011 and will examine vital rates from other southern resident goose populations to determine what might be driving the population dynamics of the Arkansas population. 
 
 ## Results and Figures
 
 ```{r, echo=F}
 library(ggplot2)
 library(grid)
+
+options(scipen=999)
+m <- as.data.frame(matrix(c(2006,2007,2008,2009,2010,2011,2012,2013,980,807,741,938,1172,1498,1123,814,15,35,21,15,27,23,9,11),ncol=3))
+colnames(m) <- c("year","banded","recovered")
+m$recov_rate <- m$recovered/m$banded
+m$recov_var <- ((m$recov_rate*(1-m$recov_rate))/(m$banded-1))
+m$recov_se <- sqrt(m$recov_var)
+m$report_rate <- 0.736
+m$report_var <- .002
+m$report_se <- .046
+m$harvest_rate <- m$recov_rate/m$report_rate
+m$harvest_var <- (m$recov_var/(m$report_rate^2))+(((m$recov_rate^2)*m$report_var)/(m$report_rate^4))
+m$num_harvested <- c(0,4851,4139,2277,22425,2207,1261,1807)
+m$adjust_harvested <- m$num_harvested*.61
+m$N_Cago <- m$adjust_harvest/m$harvest_rate
+m$N_var <- (0.1/(m$harvest_rate^2))+((m$adjust_harvested^2)*((m$harvest_var)/(m$harvest_rate^4)))
+m$N_se <- sqrt(m$N_var)
+m$N_ci_u <- m$N_Cago+m$N_se
+m$N_ci_l <- m$N_Cago-m$N_se
 ```
 
-```{r}
-setwd("~/RMark")
-dat <- read.csv("cago_cap_history.csv")
-Nhat <- as.data.frame(matrix(ncol=2, nrow=(2011-2005)))
-Nhat[,1] <- seq(2006,2011)
-```
 
-Resulting equation is captures in year i times captures in year i+1 divided by the number of birds captured in both years
-
-```{r}
-for(i in 1:6){
-    Nhat[i,2] <- (sum(dat[,(i+3)])+1)* # captures in year i + 3
-                  (sum(dat[,(i+4)])+1)/ # captures in year i + 4
-                    (sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0))+1) # captures which were captured in both years
-}
-
-for(i in 1:6){
-  Nhat[i,3] <- ((sum(dat[,(i+3)])+1)*
-                (sum(dat[,(i+4)])+1)*
-                  (sum(dat[,(i+3)])-sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0)))*
-                    (sum(dat[,(i+4)])+1)-sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0)))/
-                        (((sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0))+1)^2)*(sum(ifelse(dat[,(i+3)]&dat[,(i+4)]==1,1,0))+2))
-}
-
-Nhat
-```
-
-```{r, echo=F}
+```{r, echo=F, fig.height=3}
 options(scipen=999)
 ggplot()+
-  geom_point(data=Nhat, aes(x=V1, y=V2))+
-  geom_line(data=Nhat, aes(x=V1, y=V2))+
-  geom_line(data=Nhat, aes(x=V1, y=V3))+
-  geom_line(data=Nhat, aes(x=V1, y=-V3))+
-  #ylim(0,40000)+
+  geom_point(data=m[m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2006,], aes(x=year, y=N_ci_u))+
+  geom_line(data=m[m$year!=2006,], aes(x=year, y=N_ci_l))+
+  ylim(0,550000)+
   xlab("year")+
   ylab("Resident Canada \nGeese in Arkansas")+
-  theme(plot.title = element_text(colour="black",size=20), #plot title
-        axis.text.x = element_text(ang=90, colour="black", size=20), #x axis labels
-        axis.text.y = element_text(colour="black",size=20), #y axis labels
-        axis.title.x = element_text(colour="black",size=20),
-        axis.title.y = element_text(colour="black",size=20), #y ,axis title
-        legend.text = element_text(colour="black", size=20), #legend text
+  theme(plot.title = element_text(colour="black",size=15), #plot title
+        axis.text.x = element_text(ang=90, colour="black", size=15), #x axis labels
+        axis.text.y = element_text(colour="black",size=15), #y axis labels
+        axis.title.x = element_text(colour="black",size=15),
+        axis.title.y = element_text(colour="black",size=15), #y ,axis title
+        legend.text = element_text(colour="black", size=15), #legend text
+        legend.title = element_blank(),#legend title
+        legend.background = element_rect(fill="white"), #legend background color
+        legend.position = "top",
+        legend.direction= "horizontal",
+        legend.key = element_rect(colour="black", fill="white"),
+        legend.key.width=unit(3,"cm"),
+        plot.background = element_rect(fill = "white" ), #plot background color
+        panel.grid.major= element_line(colour=NA), 
+        panel.grid.minor=element_line(colour=NA),
+        panel.background = element_rect(fill = "white"),
+        axis.line=element_line(colour="black"))
+```
+
+2010 has a MUCH higher estimate then the other years because Canada Goose harvest was much higher in 2010 then the other years. When we remove 2010 we see that we have a fairly stable population. 
+
+
+```{r, echo=F, fig.height=3}
+options(scipen=999)
+ggplot()+
+  geom_point(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_ci_u))+
+  geom_line(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_ci_l))+
+  ylim(0,100000)+
+  xlab("year")+
+  ylab("Resident Canada \nGeese in Arkansas")+
+  theme(plot.title = element_text(colour="black",size=15), #plot title
+        axis.text.x = element_text(ang=90, colour="black", size=15), #x axis labels
+        axis.text.y = element_text(colour="black",size=15), #y axis labels
+        axis.title.x = element_text(colour="black",size=15),
+        axis.title.y = element_text(colour="black",size=15), #y ,axis title
+        legend.text = element_text(colour="black", size=15), #legend text
         legend.title = element_blank(),#legend title
         legend.background = element_rect(fill="white"), #legend background color
         legend.position = "top",
@@ -76,47 +102,25 @@ ggplot()+
         panel.background = element_rect(fill = "white"),
         axis.line=element_line(colour="black"))
 
+
 ```
 
-As you can see, while the estimates seem logical and consistent among years, the standard errors are quite large. S while our estimates suggest that resident Canada geese are relatively consistent through time and did not change after the 2007 liberalization of hunting regulations, it is quite possible that literally any other pattern could have been observed (strong increase, strong decrease, etc, etc). 
 
-So for the moment, due to other collaborators on this project wanting to wait to take this forward, we are going to examine the vital rates of resident Canada Geese in Georgia and compare these rates between rural and urban geese (data from [@Balkcom]). I would expect that geese in urban situations will have higher survival because they are not exposed to hunting mortality. There could be other sources of mortality in urban situations though that are not present in rural environments. 
+The estimates seem logical (Missouri has ~40,000 resident Canada Geese, and we would expect to have similar numbers, Andy Raedeke, MDC, personal communication). The large question is whether or not liberalized harvest in 2007 caused a decline in resident Canada Goose populations. Based on this graph the population is not declining, which is in line with other studies who have found that most suburban and urban resident Canada Goose populations are not impacted by hunting seasons [@Arbaugh2010, @Dunn2000a].
 
-Urban goose survival = .958 +/- .020
-Rural goose survival = .682 +/- .682
+So for the moment, due to other collaborators on this project wanting to wait to take this forward, we are going to stop the analysis of Arkansas Canada Goose data here and instead throw out a wider net to resident canada goose rates across the U.S. 
 
-Site fidelity (.238 - .726) [@Rhodes et al 1998]
+I am going to examine the vital rates of resident Canada Geese in Georgia and compare these rates between rural and urban geese (data from [@Balkcom2010]). I would expect that geese in urban situations will have higher survival because they are not exposed to hunting mortality. There could be other sources of mortality in urban situations though that are not present in rural environments [@Balkcom2010]. When trying to control urban and suburban goose populations new challenges arrive becuase non-hunter removal fo animals is very expensive, outside of cities hunters are the most cost effective method of animal removal as they pay to remove then, instead of having to pay others to do it [@Conover].
 
-Sit fidelity of residents in TN .50 [Combs 2004]
+Urban goose survival = .958 +/- .020 
+Rural goose survival = .682 +/- .682 
 
-Even when 22-25% of the population is harvested population growth is not diminished [@Heusmann 1999]
+In other states (GA, PA, others) additional hunting seasons have not been found to control the resident Canada Goose problem because urban geese, which make up most of resident goose populations, are not exposed to hunting pressure. [@Arbaugh2010, @Dunn2000a] 'Hunting oppurtunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@Balkcom2010]. One factor not taken into account in the following matrix model is differences in survival because of banding type. When game bird are banded with visual bands (such as neck bands) their survival declines because they are specifically targeted by hunters (survival dropped from 82 to 67% in [@Castelli1996]). 
 
-In other states (GA, PA, others) additional hunting seasons have not been found to control the resident Canada Goose problem because urban geese, which make up most of resident goose populations, are not exposed to hunting pressure. 
-
-> 'Hunting oppurtunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@ Balkcom]
-
-3.9 birds per brood (Williams and Marshall 1938)
-
-.97 = daily survival during first 14 days (Eberhardt, Anthony and Rickard 1989)
-.995 = survival during the next 56 days
-.491 = 70 day survival period
+Survival of gooslings varies with age, with older birds fledging more gooslings then younger individuals (25% of  2-year-olds raise 2.3, 31% of 3-year-olds raised 2.9 and 58% of 4+ year-olds raised 3.7 gooslings [@Raveling1981]). After fledgling a juvenile Canda Goose has a 49.1% chance of surviving to their next year [@Eberhardt1989]. 
 
 
-25% of 2 year olds raised 2.3 young (Raveling 1981)
-31% of 3 year olds raised 2.9
-58% of 5+ railed 3.7 young 
-
-geese 4+ were about 26% of the population
-
-25% adoption in first week ()
-
-some pairs that don't reproduce, raise young, but have lower survival
-
-survival by week (table 6)
-
-neckbands reduce survival (82 vs 67) (Castelli and Trost 1996)
-
-```{r}
+```{r, echo=F}
 
 
 mat <- matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
@@ -135,8 +139,185 @@ col <- colSums(v)
 
 eigens=eigen(mat)
 
-lambda=eigens$values[1] #stable lambda
-c=eigens$vectors[,1]/sum(eigens$vectors[,1]) # stable age distribution
+lambda=eigens$values[1]
+c=eigens$vectors[,1]/sum(eigens$vectors[,1]) 
+
+
+
+
+##
+lambdap0 <- matrix(nrow=1, ncol=21)
+unip0 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,unip0[i],0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
+eigenp0 <- eigen(mat)
+lambdap0[i] <- eigenp0$values[1]
+}
+
+
+lambdap1 <- matrix(nrow=1, ncol=21)
+unip1 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,unip1[i],0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
+eigenp1 <- eigen(mat)
+lambdap1[i] <- eigenp1$values[1]
+}
+#plot(unip1, lambdap1)
+
+
+lambdap2 <- matrix(nrow=1, ncol=21)
+unip2 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,.31*3.9, 0,0,unip2[i],.58*3.7,0,0,.958),ncol=4)
+eigenp2 <- eigen(mat)
+lambdap2[i] <- eigenp2$values[1]
+}
+#plot(unip2, lambdap2)
+
+# matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4) 
+lambdap3 <- matrix(nrow=1, ncol=21)
+unip3 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,unip3[i]*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+eigenp3 <- eigen(mat)
+lambdap3[i] <- eigenp3$values[1]
+}
+#plot(unip3, lambdap3)
+
+
+
+lambdap4 <- matrix(nrow=1, ncol=21)
+unip4 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,unip4[i]*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+eigenp4 <- eigen(mat)
+lambdap4[i] <- eigenp4$values[1]
+}
+#plot(unip4, lambdap4)
+
+
+
+lambdap5 <- matrix(nrow=1, ncol=21)
+unip5 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,unip5[i]*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+eigenp5 <- eigen(mat)
+lambdap5[i] <- eigenp5$values[1]
+}
+#plot(unip5, lambdap5)
+
+plot(unip0, lambdap0)
+lines(unip0, lambdap0, col="red")
+lines(unip5, lambdap5, col="orange")
+lines(unip4, lambdap4, col="yellow")
+lines(unip3, lambdap3, col="green")
+lines(unip2, lambdap2, col="blue")
+lines(unip1, lambdap1, col="purple")
+```
+
+The only variable which when varied from 0-1 that has lambda below 1 is when you vary the survival of juvenile Canada Geese, and that survival has to be below 10% before lambda is below 1. 
+
+## Conclusions
+
+Based on these results a massive effort to reduce the survival of Canada Geese juveniles may be the only effective way to reduce Canada Goose populations. Killing young geese is not likely to be a publically accepted option, and oiling goose eggs is very time consuming. Sterilizing male canada geese surgically has been shown to be effective, sterile males still pair up and females lay infertile eggs (except where extra pair copulations take place) [@Converse1994]. While this method would also be very time consuming if it was done intensively for several years in a small area it could lower the population, though just like in areas with Trap,Neuter,Release feral cats, eventually the neutered cats die and new, fertile individuals take their place. 
+
+## R Code
+
+```{r, eval=FALSE}
+library(ggplot2)
+library(grid)
+
+options(scipen=999)
+m <- as.data.frame(matrix(c(2006,2007,2008,2009,2010,2011,2012,2013,980,807,741,938,1172,1498,1123,814,15,35,21,15,27,23,9,11),ncol=3))
+colnames(m) <- c("year","banded","recovered")
+m$recov_rate <- m$recovered/m$banded
+m$recov_var <- ((m$recov_rate*(1-m$recov_rate))/(m$banded-1))
+m$recov_se <- sqrt(m$recov_var)
+m$report_rate <- 0.736
+m$report_var <- .002
+m$report_se <- .046
+m$harvest_rate <- m$recov_rate/m$report_rate
+m$harvest_var <- (m$recov_var/(m$report_rate^2))+(((m$recov_rate^2)*m$report_var)/(m$report_rate^4))
+m$num_harvested <- c(0,4851,4139,2277,22425,2207,1261,1807)
+m$adjust_harvested <- m$num_harvested*.61
+m$N_Cago <- m$adjust_harvest/m$harvest_rate
+m$N_var <- (0.1/(m$harvest_rate^2))+((m$adjust_harvested^2)*((m$harvest_var)/(m$harvest_rate^4)))
+m$N_se <- sqrt(m$N_var)
+m$N_ci_u <- m$N_Cago+m$N_se
+m$N_ci_l <- m$N_Cago-m$N_se
+
+options(scipen=999)
+ggplot()+
+  geom_point(data=m[m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2006,], aes(x=year, y=N_ci_u))+
+  geom_line(data=m[m$year!=2006,], aes(x=year, y=N_ci_l))+
+  ylim(0,550000)+
+  xlab("year")+
+  ylab("Resident Canada \nGeese in Arkansas")+
+  theme(plot.title = element_text(colour="black",size=15), #plot title
+        axis.text.x = element_text(ang=90, colour="black", size=15), #x axis labels
+        axis.text.y = element_text(colour="black",size=15), #y axis labels
+        axis.title.x = element_text(colour="black",size=15),
+        axis.title.y = element_text(colour="black",size=15), #y ,axis title
+        legend.text = element_text(colour="black", size=15), #legend text
+        legend.title = element_blank(),#legend title
+        legend.background = element_rect(fill="white"), #legend background color
+        legend.position = "top",
+        legend.direction= "horizontal",
+        legend.key = element_rect(colour="black", fill="white"),
+        legend.key.width=unit(3,"cm"),
+        plot.background = element_rect(fill = "white" ), #plot background color
+        panel.grid.major= element_line(colour=NA), 
+        panel.grid.minor=element_line(colour=NA),
+        panel.background = element_rect(fill = "white"),
+        axis.line=element_line(colour="black"))
+
+options(scipen=999)
+ggplot()+
+  geom_point(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_Cago))+
+  geom_line(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_ci_u))+
+  geom_line(data=m[m$year!=2010&m$year!=2006,], aes(x=year, y=N_ci_l))+
+  ylim(0,100000)+
+  xlab("year")+
+  ylab("Resident Canada \nGeese in Arkansas")+
+  theme(plot.title = element_text(colour="black",size=15), #plot title
+        axis.text.x = element_text(ang=90, colour="black", size=15), #x axis labels
+        axis.text.y = element_text(colour="black",size=15), #y axis labels
+        axis.title.x = element_text(colour="black",size=15),
+        axis.title.y = element_text(colour="black",size=15), #y ,axis title
+        legend.text = element_text(colour="black", size=15), #legend text
+        legend.title = element_blank(),#legend title
+        legend.background = element_rect(fill="white"), #legend background color
+        legend.position = "top",
+        legend.direction= "horizontal",
+        legend.key = element_rect(colour="black", fill="white"),
+        legend.key.width=unit(3,"cm"),
+        plot.background = element_rect(fill = "white" ), #plot background color
+        panel.grid.major= element_line(colour=NA), 
+        panel.grid.minor=element_line(colour=NA),
+        panel.background = element_rect(fill = "white"),
+        axis.line=element_line(colour="black"))
+
+mat <- matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
+
+v <- matrix(nrow=4, ncol=100)
+
+v[,1]<- c(20000*.25,20000*.25,20000*.24,20000*.26)
+
+for(i in 1:99){
+
+  v[,i+1] <- mat %*% v[,i]
+
+}
+
+col <- colSums(v)
+
+eigens=eigen(mat)
+
+lambda=eigens$values[1]
+c=eigens$vectors[,1]/sum(eigens$vectors[,1]) 
 
 
 
@@ -158,7 +339,7 @@ for(i in 1:21){
 eigenp1 <- eigen(mat)
 lambdap1[i] <- eigenp1$values[1]
 }
-plot(unip1, lambdap1)
+#plot(unip1, lambdap1)
 
 
 lambdap2 <- matrix(nrow=1, ncol=21)
@@ -168,7 +349,7 @@ for(i in 1:21){
 eigenp2 <- eigen(mat)
 lambdap2[i] <- eigenp2$values[1]
 }
-plot(unip2, lambdap2)
+#plot(unip2, lambdap2)
 
 # matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4) 
 lambdap3 <- matrix(nrow=1, ncol=21)
@@ -178,7 +359,7 @@ for(i in 1:21){
 eigenp3 <- eigen(mat)
 lambdap3[i] <- eigenp3$values[1]
 }
-plot(unip3, lambdap3)
+#plot(unip3, lambdap3)
 
 
 
@@ -189,7 +370,7 @@ for(i in 1:21){
 eigenp4 <- eigen(mat)
 lambdap4[i] <- eigenp4$values[1]
 }
-plot(unip4, lambdap4)
+#plot(unip4, lambdap4)
 
 
 
@@ -200,15 +381,11 @@ for(i in 1:21){
 eigenp5 <- eigen(mat)
 lambdap5[i] <- eigenp5$values[1]
 }
-plot(unip5, lambdap5)
-
+#plot(unip5, lambdap5)
 
 ```
 
 
-## Conclusions
 
 ## References
-
-## Appendix - R Code
 
