@@ -4,16 +4,20 @@ output: pdf_document
 ---
 
 # Resident Canada Geese Vital Rates in the SE United States
-# Auriel M.V. Fournier
-# Population Ecology Modeling Project
+Auriel M.V. Fournier  
+Population Ecology Modeling Project
 
 ## Background
 
-Canada Geese (*Branta canadensis*) have made a large comeback across much of the southern U.S in recent years [@Balkcom2010]. Some of these individuals have become resident birds, and no longer regularly migrate along with the rest of the Canada Goose population every year. Resident birds create a special management concern for southern states because they often live in urban/suburban areas and cause human/wildlife conflicts. The Arkansas Game and Fish Commission had been banding Canada Geese in Arkansas during the summer (when only resident geese are present) for ~20 years, and wants to determine if the liberalized hunting regulations of early season (September) Canada geese have had an impact on the populations of resident Canada Geese in Arkansas. 
+Canada Geese (*Branta canadensis*) have made a large comeback across much of the southern U.S in recent years [@Balkcom2010]. Some of these individuals have become resident birds, and no longer regularly migrate along with the rest of the Canada Goose population every year. Resident birds create a special management concern for southern states because they often live in urban/suburban areas and cause human/wildlife conflicts. The Arkansas Game and Fish Commission has banded Canada Geese in Arkansas during the summer (when only resident geese are present) for ~20 years, and wants to determine if the liberalized hunting regulations of early season (September) Canada geese have had an impact on the populations of resident Canada Geese in Arkansas. 
 
 ## Model Description
 
 My original plan, and still longer term plan, is to analyze these results in a live-dead recapture model in RMark/Program Mark [@Laake2013; @White1999a]. That part of the analysis has been put on hold for the moment by the other members of the project, so instead I here present the Lincoln-Peterson results from the capture/recapture data from 2006-2011 and will examine vital rates from other southern resident goose populations to determine what might be driving the population dynamics of the Arkansas population. 
+
+The first model is a Lincoln estimator of abundance, which takes into account recovery rate of banded birds, reporting rate of banded birds and the harvest rate of the entire population. 
+
+The later model is a matrix model which looks at the changing of one part of the matrix in each scenario, varying it from 0 to 1.
 
 ## Results and Figures
 
@@ -71,8 +75,7 @@ ggplot()+
         axis.line=element_line(colour="black"))
 ```
 
-2010 has a MUCH higher estimate then the other years because Canada Goose harvest was much higher in 2010 then the other years. When we remove 2010 we see that we have a fairly stable population. 
-
+2010 has a higher estimate then the other years because Canada Goose harvest was much higher in 2010 then the other years. If we remove 2010 we see that we have a fairly stable population. 
 
 ```{r, echo=F, fig.height=3}
 options(scipen=999)
@@ -108,19 +111,18 @@ ggplot()+
 
 The estimates seem logical (Missouri has ~40,000 resident Canada Geese, and we would expect to have similar numbers, Andy Raedeke, MDC, personal communication). The large question is whether or not liberalized harvest in 2007 caused a decline in resident Canada Goose populations. Based on this graph the population is not declining, which is in line with other studies who have found that most suburban and urban resident Canada Goose populations are not impacted by hunting seasons [@Arbaugh2010, @Dunn2000a].
 
-So for the moment, due to other collaborators on this project wanting to wait to take this forward, we are going to stop the analysis of Arkansas Canada Goose data here and instead throw out a wider net to resident canada goose rates across the U.S. 
+So for the moment, due to other collaborators on this project wanting to wait to take this forward, we are going to stop the analysis of Arkansas Canada Goose data here and instead throw out a wider net to resident Canada goose rates across the U.S. 
 
-I am going to examine the vital rates of resident Canada Geese in Georgia and compare these rates between rural and urban geese (data from [@Balkcom2010]). I would expect that geese in urban situations will have higher survival because they are not exposed to hunting mortality. There could be other sources of mortality in urban situations though that are not present in rural environments [@Balkcom2010]. When trying to control urban and suburban goose populations new challenges arrive becuase non-hunter removal fo animals is very expensive, outside of cities hunters are the most cost effective method of animal removal as they pay to remove then, instead of having to pay others to do it [@Conover].
+I am going to examine the vital rates of urban resident Canada Geese in Georgia [@Balkcom2010]). Urban geese present a unique problem because they are not susceptible to hunting mortality and often live in areas with increased food resources and in some cases decreased predator populations. Resident Canada Geese are defined as Canada Geese in the giant subspecies which do not perform yearly migrations, though one year old individuals may complete molt migrations where they complete one migration cycle but do not breeding during this time.  
 
-Urban goose survival = .958 +/- .020 
-Rural goose survival = .682 +/- .682 
+In Georgia and Pennsylvania additional hunting seasons have not been found to control the resident Canada Goose problem because urban geese, which make up most of resident goose populations, are not exposed to hunting pressure. [@Arbaugh2010, @Dunn2000a] 'Hunting opportunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@Balkcom2010]. One factor not taken into account in the following matrix model is differences in survival because of banding type. When game bird are banded with visual bands (such as neck bands) their survival declines because they are specifically targeted by hunters (survival dropped from 82 to 67% in [@Castelli1996]). This increase in mortality is only found in non-urban geese, which are exposed to hunting pressure. 
 
-In other states (GA, PA, others) additional hunting seasons have not been found to control the resident Canada Goose problem because urban geese, which make up most of resident goose populations, are not exposed to hunting pressure. [@Arbaugh2010, @Dunn2000a] 'Hunting oppurtunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@Balkcom2010]. One factor not taken into account in the following matrix model is differences in survival because of banding type. When game bird are banded with visual bands (such as neck bands) their survival declines because they are specifically targeted by hunters (survival dropped from 82 to 67% in [@Castelli1996]). 
+When trying to control urban and suburban goose populations new challenges arrive because non-hunter removal of animals is very expensive, outside of cities hunters are the most cost effective method of animal removal as they pay to remove then, instead of having to pay others to do it [@Conover].
 
-Survival of gooslings varies with age, with older birds fledging more gooslings then younger individuals (25% of  2-year-olds raise 2.3, 31% of 3-year-olds raised 2.9 and 58% of 4+ year-olds raised 3.7 gooslings [@Raveling1981]). After fledgling a juvenile Canda Goose has a 49.1% chance of surviving to their next year [@Eberhardt1989]. 
+Urban resident Canada Geese in Georgia have an annual survival rate of .958, which is an incredibly high probabilty of survival. Fecundity of gooslings varies with age, with older birds fledgling more gooslings then younger individuals (25% of  2-year-olds raise 2.3, 31% of 3-year-olds raised 2.9 and 58% of 4+ year-olds raised 3.7 gooslings [@Raveling1981]). After fledgling a juvenile Canada Goose has a 49.1% chance of surviving to their next year [@Eberhardt1989]. 
 
 
-```{r, echo=F}
+```{r, echo=F, fig.height=6}
 
 
 mat <- matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4)
@@ -145,7 +147,8 @@ c=eigens$vectors[,1]/sum(eigens$vectors[,1])
 
 
 
-##
+
+## Variation in juvenile survival
 lambdap0 <- matrix(nrow=1, ncol=21)
 unip0 <- seq(0, 1,by=.05)
 for(i in 1:21){
@@ -153,8 +156,9 @@ for(i in 1:21){
 eigenp0 <- eigen(mat)
 lambdap0[i] <- eigenp0$values[1]
 }
+#plot(unip0, lambdap0)
 
-
+## variation in 2 year old survival
 lambdap1 <- matrix(nrow=1, ncol=21)
 unip1 <- seq(0, 1,by=.05)
 for(i in 1:21){
@@ -164,7 +168,7 @@ lambdap1[i] <- eigenp1$values[1]
 }
 #plot(unip1, lambdap1)
 
-
+## variation in three year old survival 
 lambdap2 <- matrix(nrow=1, ncol=21)
 unip2 <- seq(0, 1,by=.05)
 for(i in 1:21){
@@ -174,28 +178,29 @@ lambdap2[i] <- eigenp2$values[1]
 }
 #plot(unip2, lambdap2)
 
-# matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4) 
+
+## variation in four year old survival 
 lambdap3 <- matrix(nrow=1, ncol=21)
 unip3 <- seq(0, 1,by=.05)
 for(i in 1:21){
-  mat <- matrix(c(0,.491,0,0,unip3[i]*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,unip3[i]),ncol=4)
 eigenp3 <- eigen(mat)
 lambdap3[i] <- eigenp3$values[1]
 }
 #plot(unip3, lambdap3)
 
-
-
+## variation in percent of two year olds that reproduce
 lambdap4 <- matrix(nrow=1, ncol=21)
 unip4 <- seq(0, 1,by=.05)
 for(i in 1:21){
-  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,unip4[i]*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+  mat <- matrix(c(0,.491,0,0,unip4[i]*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
 eigenp4 <- eigen(mat)
 lambdap4[i] <- eigenp4$values[1]
 }
 #plot(unip4, lambdap4)
 
 
+## variation in precent of three year olds that reproduce
 
 lambdap5 <- matrix(nrow=1, ncol=21)
 unip5 <- seq(0, 1,by=.05)
@@ -206,20 +211,49 @@ lambdap5[i] <- eigenp5$values[1]
 }
 #plot(unip5, lambdap5)
 
-plot(unip0, lambdap0)
-lines(unip0, lambdap0, col="red")
-lines(unip5, lambdap5, col="orange")
-lines(unip4, lambdap4, col="yellow")
-lines(unip3, lambdap3, col="green")
-lines(unip2, lambdap2, col="blue")
-lines(unip1, lambdap1, col="purple")
+
+## variation in precent of four year olds that reproduce 
+lambdap6 <- matrix(nrow=1, ncol=21)
+unip6 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,.31*3.9, 0,0,.958,unip6[i]*3.7,0,0,.958),ncol=4)
+eigenp6 <- eigen(mat)
+lambdap6[i] <- eigenp6$values[1]
+}
+#plot(unip6, lambdap6)
+
+dat <- as.numeric(cbind(lambdap0, lambdap1, lambdap2, lambdap3,lambdap4, lambdap5, lambdap6))
+uni <- as.numeric(rep(unip0, times=7))
+scen <- as.factor(rep(c("Juvenile Survival","2 Year Old Survival","3 Year Old Survival","4 Year Old Survival","% 2 year olds reproducing","% 3 year olds reproducing","% 4 year olds reproducing"), each=21))
+
+data <- as.data.frame(rbind(dat, uni))
+tran <- as.data.frame(t(data))
+tran2 <- cbind(tran, scen)
+library(reshape)
+
+mdat <- melt(tran2, id=c("scen","uni"))
+
+col <- c("#ffffcc","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84")
+
+ggplot()+
+  geom_line(data=mdat, aes(x=uni, y=value, group=scen,  colour=scen), size=2)+
+  ylab("lambda")+
+  geom_vline(xintercept=.491, col="hot pink")+geom_vline(xintercept=.58, col="green")+geom_vline(xintercept=.31, col="gold")+geom_vline(xintercept=.25, col="red")+geom_vline(xintercept=.958, col="green", size=3)+geom_vline(xintercept=.958, col="blue", size=2)+geom_vline(xintercept=.958, col="purple", size=1)+
+  theme(legend.position="top",
+        legend.title=element_blank())+
+  guides(col=guide_legend(nrow=3))
+
+
 ```
 
-The only variable which when varied from 0-1 that has lambda below 1 is when you vary the survival of juvenile Canada Geese, and that survival has to be below 10% before lambda is below 1. 
 
 ## Conclusions
 
-Based on these results a massive effort to reduce the survival of Canada Geese juveniles may be the only effective way to reduce Canada Goose populations. Killing young geese is not likely to be a publically accepted option, and oiling goose eggs is very time consuming. Sterilizing male canada geese surgically has been shown to be effective, sterile males still pair up and females lay infertile eggs (except where extra pair copulations take place) [@Converse1994]. While this method would also be very time consuming if it was done intensively for several years in a small area it could lower the population, though just like in areas with Trap,Neuter,Release feral cats, eventually the neutered cats die and new, fertile individuals take their place. 
+This figure is not encouraging if the management goal is to decrease population growth of urban Canada Geese. The vertical lines represent where populations were in the studies I found. Several of these are clearly at the high end currently, so progress could possible be made there, but in each case the survival or percent breeding of a given group would have to be dramatically decreased before a lambda below 1 could be reached, and even then it would likely be within the margin of error around 1.  
+
+Based on these results a massive effort to reduce the survival of all age classes may be necessary to reduce lambda. Killing geese is not likely to be a publicly accepted option, and oiling goose eggs is very time consuming. Sterilizing male Canada geese surgically has been shown to be effective, sterile males still pair up and females lay infertile eggs (except where extra pair copulation take place) [@Converse1994]. While this method would also be very time consuming and expensive (it does involve surgery) if it was done intensively for several years in a small area it could lower the population. Though just like in areas with Trap,Neuter,Release feral cats, eventually the neutered cats die and new, fertile individuals take their place. 
+
+Managing urban wildlife populations is never easy, especially for species which can cause strong human-wildlife conflicts (goose scat on golf courses, aggressive geese chasing children, etc). Further work needs to be done to identify any weak spots in urban goose life histories since this analysis suggests that there are none. Work may also need to be done on helping to educate the public about animal removal, and understanding what methods the public is willing to accept when controlling urban wildlife populations. 
 
 ## R Code
 
@@ -246,7 +280,7 @@ m$N_se <- sqrt(m$N_var)
 m$N_ci_u <- m$N_Cago+m$N_se
 m$N_ci_l <- m$N_Cago-m$N_se
 
-options(scipen=999)
+options(scipen=999)# removes scientific notation from numbers
 ggplot()+
   geom_point(data=m[m$year!=2006,], aes(x=year, y=N_Cago))+
   geom_line(data=m[m$year!=2006,], aes(x=year, y=N_Cago))+
@@ -321,8 +355,7 @@ c=eigens$vectors[,1]/sum(eigens$vectors[,1])
 
 
 
-
-##
+## Variation in juvenile survival
 lambdap0 <- matrix(nrow=1, ncol=21)
 unip0 <- seq(0, 1,by=.05)
 for(i in 1:21){
@@ -332,6 +365,7 @@ lambdap0[i] <- eigenp0$values[1]
 }
 plot(unip0, lambdap0)
 
+## variation in 2 year old survival
 lambdap1 <- matrix(nrow=1, ncol=21)
 unip1 <- seq(0, 1,by=.05)
 for(i in 1:21){
@@ -339,9 +373,9 @@ for(i in 1:21){
 eigenp1 <- eigen(mat)
 lambdap1[i] <- eigenp1$values[1]
 }
-#plot(unip1, lambdap1)
+plot(unip1, lambdap1)
 
-
+## variation in three year old survival 
 lambdap2 <- matrix(nrow=1, ncol=21)
 unip2 <- seq(0, 1,by=.05)
 for(i in 1:21){
@@ -349,30 +383,31 @@ for(i in 1:21){
 eigenp2 <- eigen(mat)
 lambdap2[i] <- eigenp2$values[1]
 }
-#plot(unip2, lambdap2)
+plot(unip2, lambdap2)
 
-# matrix(c(0,.491,0,0,.25*2.3,0,0.958,0,.31*3.9, 0,0,0.958,.58*3.7,0,0,.958),ncol=4) 
+
+## variation in four year old survival 
 lambdap3 <- matrix(nrow=1, ncol=21)
 unip3 <- seq(0, 1,by=.05)
 for(i in 1:21){
-  mat <- matrix(c(0,.491,0,0,unip3[i]*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,unip3[i]),ncol=4)
 eigenp3 <- eigen(mat)
 lambdap3[i] <- eigenp3$values[1]
 }
-#plot(unip3, lambdap3)
+plot(unip3, lambdap3)
 
-
-
+## variation in percent of two year olds that reproduce
 lambdap4 <- matrix(nrow=1, ncol=21)
 unip4 <- seq(0, 1,by=.05)
 for(i in 1:21){
-  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,unip4[i]*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
+  mat <- matrix(c(0,.491,0,0,unip4[i]*2.3,0,.958,0,.31*3.9, 0,0,.958,.58*3.7,0,0,.958),ncol=4)
 eigenp4 <- eigen(mat)
 lambdap4[i] <- eigenp4$values[1]
 }
-#plot(unip4, lambdap4)
+plot(unip4, lambdap4)
 
 
+## variation in precent of three year olds that reproduce
 
 lambdap5 <- matrix(nrow=1, ncol=21)
 unip5 <- seq(0, 1,by=.05)
@@ -381,11 +416,42 @@ for(i in 1:21){
 eigenp5 <- eigen(mat)
 lambdap5[i] <- eigenp5$values[1]
 }
-#plot(unip5, lambdap5)
+plot(unip5, lambdap5)
+
+
+## variation in precent of four year olds that reproduce 
+lambdap6 <- matrix(nrow=1, ncol=21)
+unip6 <- seq(0, 1,by=.05)
+for(i in 1:21){
+  mat <- matrix(c(0,.491,0,0,.25*2.3,0,.958,0,.31*3.9, 0,0,.958,unip6[i]*3.7,0,0,.958),ncol=4)
+eigenp6 <- eigen(mat)
+lambdap6[i] <- eigenp6$values[1]
+}
+plot(unip6, lambdap6)
+
+dat <- as.numeric(cbind(lambdap0, lambdap1, lambdap2, lambdap3,lambdap4, lambdap5, lambdap6))
+uni <- as.numeric(rep(unip0, times=7))
+scen <- as.factor(rep(c("Juvenile Survival","2 Year Old Survival","3 Year Old Survival","4 Year Old Survival","% 2 year olds reproducing","% 3 year olds reproducing","% 4 year olds reproducing"), each=21))
+
+data <- as.data.frame(rbind(dat, uni))
+tran <- as.data.frame(t(data))
+tran2 <- cbind(tran, scen)
+library(reshape)
+
+mdat <- melt(tran2, id=c("scen","uni"))
+
+col <- c("#ffffcc","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84")
+
+ggplot()+
+  geom_line(data=mdat, aes(x=uni, y=value, group=scen,  colour=scen), size=2)+
+  ylab("lambda")+
+  geom_vline(xintercept=.491, col="hot pink")+geom_vline(xintercept=.58, col="green")+geom_vline(xintercept=.31, col="gold")+geom_vline(xintercept=.25, col="red")+geom_vline(xintercept=.958, col="green", size=3)+geom_vline(xintercept=.958, col="blue", size=2)+geom_vline(xintercept=.958, col="purple", size=1)+
+  theme(legend.position="top",
+        legend.title=element_blank())+
+  guides(col=guide_legend(nrow=3))
+
 
 ```
-
-
 
 ## References
 
