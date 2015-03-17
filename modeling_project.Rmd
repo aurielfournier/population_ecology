@@ -1,5 +1,6 @@
 ---
 bibliography: model_project.bib
+csl: ecology.csl
 output: pdf_document
 ---
 
@@ -7,21 +8,19 @@ output: pdf_document
 Auriel M.V. Fournier  
 Population Ecology Modeling Project
 
-## Background
+### Background
 
-Canada Geese (*Branta canadensis*) have made a large comeback across much of the southern U.S in recent years [@Balkcom2010]. Some of these individuals have become resident birds, and no longer regularly migrate along with the rest of the Canada Goose population every year. Resident birds create a special management concern for southern states because they often live in urban/suburban areas and cause human/wildlife conflicts. The Arkansas Game and Fish Commission has banded Canada Geese in Arkansas during the summer (when only resident geese are present) for ~20 years, and wants to determine if the liberalized hunting regulations of early season (September) Canada geese have had an impact on the populations of resident Canada Geese in Arkansas. 
+Canada Geese (*Branta canadensis*) have made a large comeback across much of the southern U.S [@Balkcom2010]. Some of these individuals have become resident birds, and no longer regularly migrate along with the rest of the Canada Goose population. Resident birds create a special management concern for southern states because they often live in urban/suburban areas and cause human/wildlife conflicts. The Arkansas Game and Fish Commission has banded Canada Geese in Arkansas during the summer (when only resident geese are present) for ~20 years, and wants to determine if the liberalized hunting regulations of early season (September) Canada Geese have had an impact on the populations of resident Canada Geese in Arkansas. My hypothesis is that these hunts have had no impact because urban/suburban Canada Geese are not susceptible to hunting pressure and mortality would have to be very high to have an impact in the first place. 
 
-## Model Description
+### Model Description
 
-My original plan, and still longer term plan, is to analyze these results in a live-dead recapture model in RMark/Program Mark [@Laake2013; @White1999a]. That part of the analysis has been put on hold for the moment by the other members of the project, so instead I here present the Lincoln-Peterson results from the capture/recapture data from 2006-2011 and will examine vital rates from other southern resident goose populations to determine what might be driving the population dynamics of the Arkansas population. 
+My original plan, and now longer term plan, is to analyze these results in a live-dead recapture model in RMark [@Laake2013; @White1999a]. That analysis is on hold for the moment, so instead I present the Lincoln results from 2006-2013 and will examine vital rates from other southern resident goose populations to determine what might be driving the population dynamics of the resident Canada Geese in Arkansas. 
 
-The first model is a Lincoln estimator of abundance, which takes into account recovery rate of banded birds, reporting rate of banded birds and the harvest rate of the entire population. 
+The first model is a Lincoln estimator of abundance, which takes into account recovery rate of banded birds, reporting rate of banded birds and the harvest rate of the entire population. These numbers are correct to my knowledge, but one of the reasons the larger mark-recapture project is being held up is because of uncertainty with the origin and validity of the harvest estimates. The later model is a matrix model which examines changing of one part of the matrix in each scenario, varying it from 0 to 1.
 
-The later model is a matrix model which looks at the changing of one part of the matrix in each scenario, varying it from 0 to 1.
+### Results and Figures
 
-## Results and Figures
-
-```{r, echo=F}
+```{r, echo=F, fig.height=1.5}
 library(ggplot2)
 library(grid)
 
@@ -46,7 +45,7 @@ m$N_ci_l <- m$N_Cago-m$N_se
 ```
 
 
-```{r, echo=F, fig.height=3}
+```{r, echo=F, fig.height=2.5}
 options(scipen=999)
 ggplot()+
   geom_point(data=m[m$year!=2006,], aes(x=year, y=N_Cago))+
@@ -74,8 +73,10 @@ ggplot()+
         panel.background = element_rect(fill = "white"),
         axis.line=element_line(colour="black"))
 ```
+**Figure 1 - Lincoln Estimates of Adult Resident Canada Goose Populations from 2006-2013 in Arkansas**
 
-2010 has a higher estimate then the other years because Canada Goose harvest was much higher in 2010 then the other years. If we remove 2010 we see that we have a fairly stable population. 
+
+The estimate of adult Canada Goose in 2010 has a higher estimate then the other years because Canada Goose harvest was much higher in 2010 (20k vs 2k), and we are not sure why since the regulations did not differ. If we remove 2010 we see that we have a fairly stable population. 
 
 ```{r, echo=F, fig.height=3}
 options(scipen=999)
@@ -107,19 +108,17 @@ ggplot()+
 
 
 ```
+**Figure 2 - Lincoln Estimates of Adult Resident Canada Goose Populations from 2006-2013 in Arkansas, with 2010 removed because of unusually high harvest rates**
 
+Our estimates seems logical and while the estimates vary over time the standard error shows that the population is not changing significantly (Missouri has ~40,000 resident Canada Geese, and Arkansas would expect to have similar numbers (Andy Raedeke, MDC, personal communication)). Arkansas Game and Fish Commission's question of whether or not liberalized harvest in 2007 caused a decline in resident Canada Goose populations can be visually assessed with these two graphs, but further analysis is needed once we verify the harvest estimates. Based on Figure 2 the population is not declining, which is in line with other studies who have found that most suburban and urban resident Canada Goose populations are not impacted by hunting seasons, and so liberalizing (raising the bag limit and lengthening the season) does not cause a population decline [@Arbaugh2010, @Dunn2000a].
 
-The estimates seem logical (Missouri has ~40,000 resident Canada Geese, and we would expect to have similar numbers, Andy Raedeke, MDC, personal communication). The large question is whether or not liberalized harvest in 2007 caused a decline in resident Canada Goose populations. Based on this graph the population is not declining, which is in line with other studies who have found that most suburban and urban resident Canada Goose populations are not impacted by hunting seasons [@Arbaugh2010, @Dunn2000a].
+For the moment, due to other collaborators on this project wanting to wait for additional information to take this forward, we are going to stop the analysis of Arkansas Canada Goose data here and instead throw out a wider net to resident Canada goose rates across the U.S. 
 
-So for the moment, due to other collaborators on this project wanting to wait to take this forward, we are going to stop the analysis of Arkansas Canada Goose data here and instead throw out a wider net to resident Canada goose rates across the U.S. 
+I am going to examine the vital rates of urban resident Canada Geese in Georgia and other southeastern states [@Balkcom2010]). Urban geese present a unique problem because they are not susceptible to hunting mortality and often live in areas with increased food resources and in some cases decreased predator populations. Resident Canada Geese are defined as Canada Geese in the giant subspecies which do not perform yearly migrations, though one year old individuals may complete molt migrations where they complete one migration cycle but do not breeding during this time.  
 
-I am going to examine the vital rates of urban resident Canada Geese in Georgia [@Balkcom2010]). Urban geese present a unique problem because they are not susceptible to hunting mortality and often live in areas with increased food resources and in some cases decreased predator populations. Resident Canada Geese are defined as Canada Geese in the giant subspecies which do not perform yearly migrations, though one year old individuals may complete molt migrations where they complete one migration cycle but do not breeding during this time.  
+In Georgia and Pennsylvania additional hunting seasons have not been found to control the resident Canada Goose problem because urban geese, which make up most of resident goose populations, are not exposed to hunting pressure [@Arbaugh2010, @Dunn2000a]. 'Hunting opportunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@Balkcom2010]. One factor not taken into account in the following matrix model is differences in survival because of banding type. When gamebirds are banded with visual bands (such as neck bands) their survival declines because they are specifically targeted by hunters (survival of Canada Geese dropped from 82 to 67% in [@Castelli1996]). This increase in mortality is only found in non-urban geese, which are exposed to hunting pressure. Since I am modeling urban geese I did not include banding type in my model. When trying to control urban and suburban goose populations new challenges arrive because non-hunter removal of animals is very expensive, outside of cities hunters are the most cost effective method of animal removal as they pay to remove then, instead of having to pay others to do it [@Conover].
 
-In Georgia and Pennsylvania additional hunting seasons have not been found to control the resident Canada Goose problem because urban geese, which make up most of resident goose populations, are not exposed to hunting pressure. [@Arbaugh2010, @Dunn2000a] 'Hunting opportunity may be at or near the maximum sustainable rate for rural geese, yet sport hunting appears to have a small impact on urban geese' [@Balkcom2010]. One factor not taken into account in the following matrix model is differences in survival because of banding type. When game bird are banded with visual bands (such as neck bands) their survival declines because they are specifically targeted by hunters (survival dropped from 82 to 67% in [@Castelli1996]). This increase in mortality is only found in non-urban geese, which are exposed to hunting pressure. 
-
-When trying to control urban and suburban goose populations new challenges arrive because non-hunter removal of animals is very expensive, outside of cities hunters are the most cost effective method of animal removal as they pay to remove then, instead of having to pay others to do it [@Conover].
-
-Urban resident Canada Geese in Georgia have an annual survival rate of .958, which is an incredibly high probabilty of survival. Fecundity of gooslings varies with age, with older birds fledgling more gooslings then younger individuals (25% of  2-year-olds raise 2.3, 31% of 3-year-olds raised 2.9 and 58% of 4+ year-olds raised 3.7 gooslings [@Raveling1981]). After fledgling a juvenile Canada Goose has a 49.1% chance of surviving to their next year [@Eberhardt1989]. 
+Urban resident Canada Geese in Georgia have an annual survival rate of 95.8%, which is an incredibly high probability of survival. Fecundity of gooslings varies with age, with older birds fledgling more gooslings then younger individuals (25% of  2-year-olds raise 2.3, 31% of 3-year-olds raised 2.9 and 58% of 4+ year-olds raised 3.7 gooslings [@Raveling1981]). After fledgling a juvenile Canada Goose has a 49.1% chance of surviving to their next year [@Eberhardt1989]. 
 
 
 ```{r, echo=F, fig.height=6}
@@ -245,17 +244,17 @@ ggplot()+
 
 
 ```
+**Figure 3 - Variation in survival and breeding percentage for each age class of resident Canada Goose in the southeast**
 
+### Conclusions
 
-## Conclusions
+Figure 3 is not encouraging if the management goal is to decrease population growth of urban Canada Geese. The vertical lines represent where populations were in the studies I found. Several of these are clearly at the high end of possible values currently, so progress could be made there if reducing survival of adult (2-4+ year old individuals) was possible. The problem is in each case the survival or percent breeding of a given group would have to be dramatically decreased before a lambda below 1 could be reached, and even then it would likely be within the margin of error around 1.  
 
-This figure is not encouraging if the management goal is to decrease population growth of urban Canada Geese. The vertical lines represent where populations were in the studies I found. Several of these are clearly at the high end currently, so progress could possible be made there, but in each case the survival or percent breeding of a given group would have to be dramatically decreased before a lambda below 1 could be reached, and even then it would likely be within the margin of error around 1.  
-
-Based on these results a massive effort to reduce the survival of all age classes may be necessary to reduce lambda. Killing geese is not likely to be a publicly accepted option, and oiling goose eggs is very time consuming. Sterilizing male Canada geese surgically has been shown to be effective, sterile males still pair up and females lay infertile eggs (except where extra pair copulation take place) [@Converse1994]. While this method would also be very time consuming and expensive (it does involve surgery) if it was done intensively for several years in a small area it could lower the population. Though just like in areas with Trap,Neuter,Release feral cats, eventually the neutered cats die and new, fertile individuals take their place. 
+Based on these results a massive effort to reduce the survival of all age classes may be necessary to reduce lambda. Killing geese is not likely to be a publicly accepted option, and oiling goose eggs is very time consuming. Sterilizing male Canada geese surgically has been shown to be effective, sterile males still pair up and females lay infertile eggs (except where extra pair copulation take place) [@Converse1994]. While this method would also be very time consuming and expensive (it does involve surgery) if it was done intensively for several years in a small area it could lower the population. Though just like in areas with Trap, Neuter, Release feral cat colonies, eventually the neutered cats die and new, fertile individuals take their place. 
 
 Managing urban wildlife populations is never easy, especially for species which can cause strong human-wildlife conflicts (goose scat on golf courses, aggressive geese chasing children, etc). Further work needs to be done to identify any weak spots in urban goose life histories since this analysis suggests that there are none. Work may also need to be done on helping to educate the public about animal removal, and understanding what methods the public is willing to accept when controlling urban wildlife populations. 
 
-## R Code
+### R Code
 
 ```{r, eval=FALSE}
 library(ggplot2)
@@ -453,5 +452,5 @@ ggplot()+
 
 ```
 
-## References
+### References
 
