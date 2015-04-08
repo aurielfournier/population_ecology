@@ -1,11 +1,11 @@
 
-# Implications of habitat-mediated density dependence in Crawfish Frogs (*Lithobates areolatus*)
+## Implications of habitat-mediated density dependence in Crawfish Frogs (*Lithobates areolatus*)
 
 ## Auriel M.V. Fournier
 ## Population Ecology
 ## Spring 2015
 
-# Background
+## Background
 
 Why is density dependence important? Why would it vary because of environment? Why are amphibians a good study organism? 
 
@@ -13,15 +13,148 @@ While frogs are vertebrates they have a fairly quick life cycle and the parts of
 
 We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress (CITATION). 
 
-# Experimental Design
+## Experimental Design
 
-# Model Description
+## Model Description
 
-# Results
+## Results
 
-# Discussion
+## Discussion
 
-# Figures
+## Figures
 
-# References
+```{r, include=FALSE}
+
+## Fecundity (Fa) clutch size * survival(eggs) * survival(tadpoles)(function of time) * survival(metamorphs) * sex ratio
+phi = 5000
+se = .6
+sm = .2
+sj = .2
+sa = .75
+stmax = .8
+p = .5
+d = .05
+gamma = 1
+tmax = 200
+
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+
+N <- matrix(nrow=2,ncol=tmax)
+N[,1] <- 1
+
+
+for(t in 2:tmax){
+tt = N[2,t-1] * p * phi * se
+st = (stmax)/((1+d*tt)^gamma)
+ft = p * phi * se * st * sm
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+newN <- mat %*% N[,t-1]
+N[,t] <- newN
+}
+
+
+plot(seq(1:tmax), N[2,])
+
+max(N[2,])
+
+
+
+####
+
+## Sensativity
+
+####
+
+
+phi = 5000
+se = .6
+sm = .2
+sj = .2
+sa = seq(0,1,by=.01)
+stmax = .8
+p = .5
+d = .05
+gamma = 1
+tmax = 1000
+
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+
+N <- matrix(nrow=2,ncol=tmax)
+N[,1] <- 1
+
+savad <- matrix(ncol=2, nrow=length(sa))
+savad[,1] <- sa
+
+for(i in 1:length(sa)){
+	for(t in 2:tmax){
+		tt = N[2,t-1] * p * phi * se
+		st = (stmax)/((1+d*tt)^gamma)
+		ft = p * phi * se * st * sm
+		mat <- matrix(c(0,sj,ft,sa[i]),ncol=2, nrow=2)
+		newN <- mat %*% N[,t-1]
+		N[,t] <- newN
+	}
+savad[i,2] <- newN[2,]
+}
+
+
+
+
+###
+
+## egg survival
+
+###
+
+
+phi = 5000
+se = seq(0,1,by=.01)
+sm = .2
+sj = .2
+sa = .75
+stmax = .8
+p = .5
+d = .05
+gamma = 1
+tmax = 1000
+
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+
+N <- matrix(nrow=2,ncol=tmax)
+N[,1] <- 1
+
+savegg <- matrix(ncol=2, nrow=length(se))
+savegg[,1] <- se
+
+for(i in 1:length(se)){
+	for(t in 2:tmax){
+		tt = N[2,t-1] * p * phi * se[i]
+		st = (stmax)/((1+d*tt)^gamma)
+		ft = p * phi * se[i] * st * sm
+		mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+		newN <- mat %*% N[,t-1]
+		N[,t] <- newN
+	}
+savegg[i,2] <- newN[2,]
+}
+
+
+
+###
+
+## plots
+
+###
+
+par(mfrow=c(3,1))
+plot(seq(1:tmax), N[2,], main="initial model")
+plot(savegg, main="egg survival")
+plot(savad, main="adult survival")
+
+```
+Figure 1 - (top) Our initial population model using the parameters given to us in class)
+(middle) our sensativity analysis of egg survival
+(bottom) our sensativity analysis of adult survival
+
+## References
 
