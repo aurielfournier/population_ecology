@@ -1,4 +1,8 @@
-
+---
+bibliography: ex_writeup.bib
+csl: ecology.csl
+output: pdf_document
+---
 ## Implications of habitat-mediated density dependence in Crawfish Frogs (*Lithobates areolatus*)
 
 ## Auriel M.V. Fournier
@@ -9,9 +13,13 @@
 
 Why is density dependence important? Why would it vary because of environment? Why are amphibians a good study organism? 
 
-While frogs are vertebrates they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages (eggs Vonesh et al) (aquatic alrval and terrestrial juvenile stages Altwegg et al) (juvenile terestrial stage Harper et al) but not in relation to environmental covariates which could play a role by limiting growth or resources and incuding density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
+While frogs are vertebrates they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages (eggs [@Vonesh2002] (aquatic alrval and terrestrial juvenile stages [@Altwegg2003] (juvenile terestrial stage [@Harper2007] but not often in differening habitat conditions. Though Patrick et al [-@Patrick2008] did exampine habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and incuding density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
 
 We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress (CITATION). 
+
+UV impacts on density dependence [@Blaustein2003]
+
+overcoming density depenedce and insecticides [@Boone2005]
 
 ## Experimental Design
 
@@ -32,21 +40,37 @@ d = .05 # density dependence coefficient
 gamma = 1 # density dependence exponent
 tmax = 200 # number of years for the time series
 
-# creating the time series matrix, two rows (juveniles and adults) and a column for every year
+# creating the time series matrix, two rows (juveniles and adults) and a column for 
+#every year
 N <- matrix(nrow=2,ncol=tmax)
-# giving it the starting values, what we put here does not matter, it will converge on the same equillibrium, it may just take longer
+# giving it the starting values, what we put here does not matter, 
+#it will converge on the same equillibrium, it may just take longer
 N[,1] <- 1
 
 # for loop
-# this loops through each year, starting with year 2 since we already gave it the year 1 values to start with
+# this loops through each year, starting with year 2 since we already gave it the 
+#year 1 values to start with
 for(t in 2:tmax){
-tt = N[2,t-1] * p * phi * se # gives us teh total number of tadpoles hatched by taking the number of adults from the previouis year, and multiplying it by the sex ratio, the clutch size per female, and the egg survival
-st = (stmax)/((1+d*tt)^gamma) # gives us tadpole survival, which is maximum egg survival divided by 1 + the density dependent coefficient times the number of tadpoles in this time step rasied to gamma
-ft = p * phi * se * st * sm # this gives us our per capita fecundity by taking the sex ratio times the clutch size, times the survival of eggs time the survival of tadpoles (from above) and the survival of metamorphs
-mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2) # this takes the values we just figured out, along with a few we defined before the loop to create our matrix, it's a simple 2x2 matrix. the first column is 0 and survival of juveniles to become adults. the 0 is because all the juveniles leave the juvenile category, none remain
-# the second column is the fecundity at this time step (so the number of eggs laid that become juveniles) and then the survival of adults
-newN <- mat %*% N[,t-1] # here we are multiplying our matrix we just created times the population size from the previous time step in our N time series matrix
-N[,t] <- newN # this takes the results of taht matrix multiplication and puts it in as the population size for this time step so that we can move onto the next one. 
+tt = N[2,t-1] * p * phi * se # gives us teh total number of tadpoles hatched by 
+#taking the number of adults from the previouis year, and multiplying it by the 
+#sex ratio, the clutch size per female, and the egg survival
+st = (stmax)/((1+d*tt)^gamma) # gives us tadpole survival, which is maximum egg 
+#survival divided by 1 + the density dependent coefficient times the number of 
+#tadpoles in this time step rasied to gamma
+ft = p * phi * se * st * sm # this gives us our per capita fecundity by taking 
+#the sex ratio times the clutch size, times the survival of eggs time the survival 
+#of tadpoles (from above) and the survival of metamorphs
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2) # this takes the values we just 
+#figured out, along with a few we defined before the loop to create our matrix, 
+#it's a simple 2x2 matrix. the first column is 0 and survival of juveniles to 
+#become adults. the 0 is because all the juveniles leave the juvenile category, 
+#none remain
+# the second column is the fecundity at this time step (so the number of eggs 
+#laid that become juveniles) and then the survival of adults
+newN <- mat %*% N[,t-1] # here we are multiplying our matrix we just created 
+#times the population size from the previous time step in our N time series matrix
+N[,t] <- newN # this takes the results of taht matrix multiplication and puts 
+#it in as the population size for this time step so that we can move onto the next one. 
 }
 ```
 
@@ -56,9 +80,7 @@ N[,t] <- newN # this takes the results of taht matrix multiplication and puts it
 
 ## Figures
 
-```{r, include=FALSE}
-
-## Fecundity (Fa) clutch size * survival(eggs) * survival(tadpoles)(function of time) * survival(metamorphs) * sex ratio
+```{r, echo=FALSE}
 phi = 5000
 se = .6
 sm = .2
@@ -84,12 +106,6 @@ mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
 newN <- mat %*% N[,t-1]
 N[,t] <- newN
 }
-
-
-plot(seq(1:tmax), N[2,])
-
-max(N[2,])
-
 
 
 ####
@@ -179,15 +195,26 @@ savegg[i,2] <- newN[2,]
 
 ###
 
-par(mfrow=c(3,1))
+```
+
+```{r, echo=FALSE}
 plot(seq(1:tmax), N[2,], main="initial model")
+```
+
+Figure 1 - (Our initial population model using the parameters given to us in class)
+
+```{r, echo=FALSE}
 plot(savegg, main="egg survival")
+```
+
+Figure 2 - (Our sensativity analysis of egg survival)
+
+```{r, echo=FALSE}
 plot(savad, main="adult survival")
 
 ```
-Figure 1 - (top) Our initial population model using the parameters given to us in class)
-(middle) our sensativity analysis of egg survival
-(bottom) our sensativity analysis of adult survival
+
+Figure 3 - (Our sensativity analysis of adult survival)
 
 ## References
 
