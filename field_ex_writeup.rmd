@@ -17,6 +17,39 @@ We are looking at a variety of densities and four different habitat/vegetation s
 
 ## Model Description
 
+Our model is a time series model, so it allows a parameter in the matrix to change with each time step. In our case this changing parameter is Fecundity of adults which is a function of the number of tadpoles, their survival and the number of adults. 
+
+```{r}
+
+phi = 5000 # clutch size
+se = .6 # egg survival
+sm = .2 # metamorph survival
+sj = .2 # juvenile survival
+sa = .75 #adult survival
+stmax = .8 # max egg survival
+p = .5 # sex ratio
+d = .05 # density dependence coefficient
+gamma = 1 # density dependence exponent
+tmax = 200 # number of years for the time series
+
+# creating the time series matrix, two rows (juveniles and adults) and a column for every year
+N <- matrix(nrow=2,ncol=tmax)
+# giving it the starting values, what we put here does not matter, it will converge on the same equillibrium, it may just take longer
+N[,1] <- 1
+
+# for loop
+# this loops through each year, starting with year 2 since we already gave it the year 1 values to start with
+for(t in 2:tmax){
+tt = N[2,t-1] * p * phi * se # gives us teh total number of tadpoles hatched by taking the number of adults from the previouis year, and multiplying it by the sex ratio, the clutch size per female, and the egg survival
+st = (stmax)/((1+d*tt)^gamma) # gives us tadpole survival, which is maximum egg survival divided by 1 + the density dependent coefficient times the number of tadpoles in this time step rasied to gamma
+ft = p * phi * se * st * sm # this gives us our per capita fecundity by taking the sex ratio times the clutch size, times the survival of eggs time the survival of tadpoles (from above) and the survival of metamorphs
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2) # this takes the values we just figured out, along with a few we defined before the loop to create our matrix, it's a simple 2x2 matrix. the first column is 0 and survival of juveniles to become adults. the 0 is because all the juveniles leave the juvenile category, none remain
+# the second column is the fecundity at this time step (so the number of eggs laid that become juveniles) and then the survival of adults
+newN <- mat %*% N[,t-1] # here we are multiplying our matrix we just created times the population size from the previous time step in our N time series matrix
+N[,t] <- newN # this takes the results of taht matrix multiplication and puts it in as the population size for this time step so that we can move onto the next one. 
+}
+```
+
 ## Results
 
 ## Discussion
