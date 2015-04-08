@@ -7,6 +7,12 @@
 
 # Background
 
+Why is density dependence important? Why would it vary because of environment? Why are amphibians a good study organism? 
+
+While frogs are vertebrates they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages (eggs Vonesh et al) (aquatic alrval and terrestrial juvenile stages Altwegg et al) (juvenile terestrial stage Harper et al) but not in relation to environmental covariates which could play a role by limiting growth or resources and incuding density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
+
+We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress (CITATION). 
+
 # Experimental Design
 
 # Model Description
