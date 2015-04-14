@@ -11,9 +11,7 @@ output: pdf_document
 
 ## Background
 
-Why is density dependence important? Why would it vary because of environment? Why are amphibians a good study organism? 
-
-While frogs are vertebrates they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages (eggs [@Vonesh2002] (aquatic alrval and terrestrial juvenile stages [@Altwegg2003] (juvenile terestrial stage [@Harper2007] but not often in differening habitat conditions. Though Patrick et al [-@Patrick2008] did exampine habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and incuding density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
+Density dependence, if it exists, is very important in understanding the population ecology of a species. While there are some exceptions (the Allee effect) where a minimum viable population is important, often lower density populations have higher individual survival. Density dependence is often not the only factor impacting survival of a population, or a certain part of a population, environmental variables can also play a huge role. Either by releasing a segment of the population from the limting factors creating density dependence, or by making the limiting factors more limiting, or adding additional limitations. This coudl be done by providing additional food, or additional shelter or by introducting new predators, removing shelter or adding new chemicals into the environment that limit growth or survival. These relationships have been examined in many invertebrates, but species with longer life spans can have similar mechanisms but they are more difficult to tease apart. Amphibians provide a good vertebrate model organism because they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages (eggs [@Vonesh2002] (aquatic alrval and terrestrial juvenile stages [@Altwegg2003] (juvenile terestrial stage [@Harper2007] but not often in differening habitat conditions. Though Patrick et al [-@Patrick2008] did exampine habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and incuding density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
 
 We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress (CITATION). 
 
@@ -23,56 +21,14 @@ overcoming density depenedce and insecticides [@Boone2005]
 
 ## Experimental Design
 
+We created four rafts of mesocosms to be deployed at Woolsey Wet Prarie, a local restored wetland in Fayetteville, AR. TWo rafts were deployed in the restored wetland portion of Woolsey, and two in the farm pond portion of woolsey. Within these two rafts there were a fully factorial design of combinations of two plant communities (fescue and native prarie) and differing densities (1,3,6,21,24,48 tadpoles). We selected these two plant communities to see if the non-native fescue grass has a different impact on tadpole density then the native prarie grass. We choose densities across a wide range (1-48) to ensure that we picked densites extreme enough to be able to determine if there are density dependence effects. 
+
+Our responses are both survival and growth. To measure survival the mesocosms are checked at regular intervals and individuals in each mesocosm are counted. Growth was measured by assessing the size and weight of tadpoles at regular intervals. We predict that there will be density dependence, and that fescue grass will have more negative density dependence then prarie grass because it exudes chemicals which impact tadpoles. We predict that tadpoles will grow better and be less susceptible to density dependence in teh restored wetladn then the farm pond. 
+
 ## Model Description
 
-Our model is a time series model, so it allows a parameter in the matrix to change with each time step. In our case this changing parameter is Fecundity of adults which is a function of the number of tadpoles, their survival and the number of adults. 
+Our model is a time series model and allows a parameter in the matrix to change with each time step. We are allowing the Fecundity of adults paramter to vary, which is a function of the number of tadpoles, their survival and the number of adults. 
 
-```{r}
-
-phi = 5000 # clutch size
-se = .6 # egg survival
-sm = .2 # metamorph survival
-sj = .2 # juvenile survival
-sa = .75 #adult survival
-stmax = .8 # max egg survival
-p = .5 # sex ratio
-d = .05 # density dependence coefficient
-gamma = 1 # density dependence exponent
-tmax = 200 # number of years for the time series
-
-# creating the time series matrix, two rows (juveniles and adults) and a column for 
-#every year
-N <- matrix(nrow=2,ncol=tmax)
-# giving it the starting values, what we put here does not matter, 
-#it will converge on the same equillibrium, it may just take longer
-N[,1] <- 1
-
-# for loop
-# this loops through each year, starting with year 2 since we already gave it the 
-#year 1 values to start with
-for(t in 2:tmax){
-tt = N[2,t-1] * p * phi * se # gives us teh total number of tadpoles hatched by 
-#taking the number of adults from the previouis year, and multiplying it by the 
-#sex ratio, the clutch size per female, and the egg survival
-st = (stmax)/((1+d*tt)^gamma) # gives us tadpole survival, which is maximum egg 
-#survival divided by 1 + the density dependent coefficient times the number of 
-#tadpoles in this time step rasied to gamma
-ft = p * phi * se * st * sm # this gives us our per capita fecundity by taking 
-#the sex ratio times the clutch size, times the survival of eggs time the survival 
-#of tadpoles (from above) and the survival of metamorphs
-mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2) # this takes the values we just 
-#figured out, along with a few we defined before the loop to create our matrix, 
-#it's a simple 2x2 matrix. the first column is 0 and survival of juveniles to 
-#become adults. the 0 is because all the juveniles leave the juvenile category, 
-#none remain
-# the second column is the fecundity at this time step (so the number of eggs 
-#laid that become juveniles) and then the survival of adults
-newN <- mat %*% N[,t-1] # here we are multiplying our matrix we just created 
-#times the population size from the previous time step in our N time series matrix
-N[,t] <- newN # this takes the results of taht matrix multiplication and puts 
-#it in as the population size for this time step so that we can move onto the next one. 
-}
-```
 
 ## Results
 
@@ -92,7 +48,6 @@ d = .05
 gamma = 1
 tmax = 200
 
-mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
 
 N <- matrix(nrow=2,ncol=tmax)
 N[,1] <- 1
@@ -197,24 +152,24 @@ savegg[i,2] <- newN[2,]
 
 ```
 
-```{r, echo=FALSE}
-plot(seq(1:tmax), N[2,], main="initial model")
+```{r, echo=FALSE, fig.height=4}
+plot(seq(1:tmax), N[2,], main="initial model", xlab="time", ylab="population size")
 ```
 
-Figure 1 - (Our initial population model using the parameters given to us in class)
+**Figure 1 - Our initial population model using the parameters given to us in class**
 
-```{r, echo=FALSE}
-plot(savegg, main="egg survival")
+```{r, echo=FALSE, fig.height=4}
+plot(savegg, main="egg survival", xlab="survival of eggs", ylab="population size")
 ```
 
-Figure 2 - (Our sensativity analysis of egg survival)
+**Figure 2 - Our sensativity analysis of egg survival, showing that unless egg survival is below 10% it will not have an impact on population size. **
 
-```{r, echo=FALSE}
-plot(savad, main="adult survival")
+```{r, echo=FALSE, fig.height=4}
+plot(savad, main="adult survival", xlab="survival of adults", ylab="population size")
 
 ```
 
-Figure 3 - (Our sensativity analysis of adult survival)
+**Figure 3 - Our sensativity analysis of adult survival, showing that unless adult survival is above 90% it will not have an impact on population size. **
 
 ## References
 
