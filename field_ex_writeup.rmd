@@ -21,13 +21,28 @@ overcoming density depenedce and insecticides [@Boone2005]
 
 ## Experimental Design
 
-We created four rafts of mesocosms to be deployed at Woolsey Wet Prarie, a local restored wetland in Fayetteville, AR. TWo rafts were deployed in the restored wetland portion of Woolsey, and two in the farm pond portion of woolsey. Within these two rafts there were a fully factorial design of combinations of two plant communities (fescue and native prarie) and differing densities (1,3,6,21,24,48 tadpoles). We selected these two plant communities to see if the non-native fescue grass has a different impact on tadpole density then the native prarie grass. We choose densities across a wide range (1-48) to ensure that we picked densites extreme enough to be able to determine if there are density dependence effects. 
+We created four rafts of mesocosms to be deployed at Woolsey Wet Prarie, a local restored wetland in Fayetteville, AR. TWo rafts were deployed in the restored wetland portion of Woolsey, and two in the farm pond portion of woolsey. Each raft in the pond habitat was given fescue grass (a non-native grass that grows around the ponds) and the restored wetland areas were given native prarie grass (collected from the restored area). The following densities were repeated across the two rafts(1,3,6,21,24,48 tadpoles). We selected these two plant communities to see if the non-native fescue grass has a different impact on tadpole density then the native prarie grass. We choose densities across a wide range (1-48) to ensure that we picked densites extreme enough to be able to determine if there are density dependence effects. 
 
 Our responses are both survival and growth. To measure survival the mesocosms are checked at regular intervals and individuals in each mesocosm are counted. Growth was measured by assessing the size and weight of tadpoles at regular intervals. We predict that there will be density dependence, and that fescue grass will have more negative density dependence then prarie grass because it exudes chemicals which impact tadpoles. We predict that tadpoles will grow better and be less susceptible to density dependence in teh restored wetladn then the farm pond. 
 
 ## Model Description
 
-Our model is a time series model and allows a parameter in the matrix to change with each time step. We are allowing the Fecundity of adults paramter to vary, which is a function of the number of tadpoles, their survival and the number of adults. 
+We were given some possible data to use in our model and used the script provided by Dr. Willson to obtain the gamma and density dependent scaling factor for each habitat type. We did this by varying the d and gamma values across a wide range, comparing the line to the possible values and finding the combination of values which had the lowest residuals (straight line distance along the y axis). 
+
+```{r results='asis', echo=FALSE}
+library(xtable)
+header <- c("Variable","pond","prairie")
+dd <- c("density dependent scaling factor",0.0059059, 0.007007007)
+gamma <- c("gamma", 1.20, 0.94)
+
+df <- rbind(dd, gamma)
+colnames(df) <- header
+
+print(xtable(df, comment=FALSE,caption="Results from Possible Data Model"), comment=FALSE, caption.placement="top")
+
+```
+
+I used these values in the time series model to look at the impacts of these variables on population growth as a whole. Our model is a time series model and allows a parameter in the matrix to change with each time step. We are allowing the Fecundity of adults paramter to vary, which is a function of the number of tadpoles, their survival and the number of adults. 
 
 
 ## Results
@@ -44,22 +59,22 @@ sj = .2
 sa = .75
 stmax = .8
 p = .5
-d = .05
-gamma = 1
+d = .0007007007
+gamma = .94
 tmax = 200
 
 
-N <- matrix(nrow=2,ncol=tmax)
-N[,1] <- 1
+NGr <- matrix(nrow=2,ncol=tmax)
+NGr[,1] <- 1
 
 
 for(t in 2:tmax){
-tt = N[2,t-1] * p * phi * se
+tt = NGr[2,t-1] * p * phi * se
 st = (stmax)/((1+d*tt)^gamma)
 ft = p * phi * se * st * sm
 mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
-newN <- mat %*% N[,t-1]
-N[,t] <- newN
+newN <- mat %*% NGr[,t-1]
+NGr[,t] <- newN
 }
 
 
@@ -77,28 +92,28 @@ sj = .2
 sa = seq(0,1,by=.01)
 stmax = .8
 p = .5
-d = .05
-gamma = 1
+d = .0007007007
+gamma = .94
 tmax = 1000
 
 mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
 
-N <- matrix(nrow=2,ncol=tmax)
-N[,1] <- 1
+NGr <- matrix(nrow=2,ncol=tmax)
+NGr[,1] <- 1
 
-savad <- matrix(ncol=2, nrow=length(sa))
-savad[,1] <- sa
+savadGr <- matrix(ncol=2, nrow=length(sa))
+savadGr[,1] <- sa
 
 for(i in 1:length(sa)){
 	for(t in 2:tmax){
-		tt = N[2,t-1] * p * phi * se
+		tt = NGr[2,t-1] * p * phi * se
 		st = (stmax)/((1+d*tt)^gamma)
 		ft = p * phi * se * st * sm
 		mat <- matrix(c(0,sj,ft,sa[i]),ncol=2, nrow=2)
-		newN <- mat %*% N[,t-1]
-		N[,t] <- newN
+		newN <- mat %*% NGr[,t-1]
+		NGr[,t] <- newN
 	}
-savad[i,2] <- newN[2,]
+savadGr[i,2] <- newN[2,]
 }
 
 
@@ -118,58 +133,165 @@ sj = .2
 sa = .75
 stmax = .8
 p = .5
-d = .05
-gamma = 1
+d = .0007007007
+gamma = .94
 tmax = 1000
 
 mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
 
-N <- matrix(nrow=2,ncol=tmax)
-N[,1] <- 1
+NGr <- matrix(nrow=2,ncol=tmax)
+NGr[,1] <- 1
 
-savegg <- matrix(ncol=2, nrow=length(se))
-savegg[,1] <- se
+saveggGr <- matrix(ncol=2, nrow=length(se))
+saveggGr[,1] <- se
 
 for(i in 1:length(se)){
 	for(t in 2:tmax){
-		tt = N[2,t-1] * p * phi * se[i]
+		tt = NGr[2,t-1] * p * phi * se[i]
 		st = (stmax)/((1+d*tt)^gamma)
 		ft = p * phi * se[i] * st * sm
 		mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
-		newN <- mat %*% N[,t-1]
-		N[,t] <- newN
+		newN <- mat %*% NGr[,t-1]
+		NGr[,t] <- newN
 	}
-savegg[i,2] <- newN[2,]
+saveggGr[i,2] <- newN[2,]
 }
 
 
 
+
+```
+
+
+
+```{r, echo=FALSE}
+phi = 5000
+se = .6
+sm = .2
+sj = .2
+sa = .75
+stmax = .8
+p = .5
+d = .0059059
+gamma = 1.20
+tmax = 200
+
+
+NPo <- matrix(nrow=2,ncol=tmax)
+NPo[,1] <- 1
+
+
+for(t in 2:tmax){
+tt = NPo[2,t-1] * p * phi * se
+st = (stmax)/((1+d*tt)^gamma)
+ft = p * phi * se * st * sm
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+newN <- mat %*% NPo[,t-1]
+NPo[,t] <- newN
+}
+
+
+####
+
+## Sensativity
+
+####
+
+
+phi = 5000
+se = .6
+sm = .2
+sj = .2
+sa = seq(0,1,by=.01)
+stmax = .8
+p = .5
+d = .0059059
+gamma = 1.20
+tmax = 1000
+
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+
+NPo <- matrix(nrow=2,ncol=tmax)
+NPo[,1] <- 1
+
+savadPo <- matrix(ncol=2, nrow=length(sa))
+savadPo[,1] <- sa
+
+for(i in 1:length(sa)){
+  for(t in 2:tmax){
+		tt = NPo[2,t-1] * p * phi * se
+		st = (stmax)/((1+d*tt)^gamma)
+		ft = p * phi * se * st * sm
+		mat <- matrix(c(0,sj,ft,sa[i]),ncol=2, nrow=2)
+		newN <- mat %*% NPo[,t-1]
+		NPo[,t] <- newN
+	}
+savadPo[i,2] <- newN[2,]
+}
+
+
+
+
 ###
 
-## plots
+## egg survival
 
 ###
+
+
+phi = 5000
+se = seq(0,1,by=.01)
+sm = .2
+sj = .2
+sa = .75
+stmax = .8
+p = .5
+d = .0059059
+gamma = 1.20
+tmax = 1000
+
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+
+NPo <- matrix(nrow=2,ncol=tmax)
+NPo[,1] <- 1
+
+saveggPo <- matrix(ncol=2, nrow=length(se))
+saveggPo[,1] <- se
+
+for(i in 1:length(se)){
+	for(t in 2:tmax){
+		tt = NPo[2,t-1] * p * phi * se[i]
+		st = (stmax)/((1+d*tt)^gamma)
+		ft = p * phi * se[i] * st * sm
+		mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+		newN <- mat %*% NPo[,t-1]
+		NPo[,t] <- newN
+	}
+saveggPo[i,2] <- newN[2,]
+}
+
+
+
+
 
 ```
 
 ```{r, echo=FALSE, fig.height=4}
-plot(seq(1:tmax), N[2,], main="initial model", xlab="time", ylab="population size")
+plot(seq(1:tmax), NGr[2,], main="initial model", xlab="time", ylab="population size", col="black")
+points(seq(1:tmax),NPo[2,], col="red")
 ```
 
 **Figure 1 - Our initial population model using the parameters given to us in class**
 
 ```{r, echo=FALSE, fig.height=4}
-plot(savegg, main="egg survival", xlab="survival of eggs", ylab="population size")
+par(mfrow=c(1,2))
+plot(saveggGr,  xlab="survival of eggs", ylab="population size")
+points(saveggPo, col="purple")
+plot(savadGr,  xlab="survival of adults", ylab="population size", ylim=c(0,10000))
+points(savadPo, col="purple")
 ```
 
-**Figure 2 - Our sensativity analysis of egg survival, showing that unless egg survival is below 10% it will not have an impact on population size. **
-
-```{r, echo=FALSE, fig.height=4}
-plot(savad, main="adult survival", xlab="survival of adults", ylab="population size")
-
-```
-
-**Figure 3 - Our sensativity analysis of adult survival, showing that unless adult survival is above 90% it will not have an impact on population size. **
+**Figure  - Sensativity Analysis of egg and adult survival in each habitat type (y scale on adult graph shortened to allow for visual interpretation of results**
 
 ## References
 
