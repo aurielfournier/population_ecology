@@ -11,45 +11,44 @@ output: pdf_document
 
 ## Background
 
-Density dependence, if it exists, is very important in understanding the population ecology of a species. While there are some exceptions (the Allee effect) where a minimum viable population is important, often lower density populations have higher individual survival. Density dependence is often not the only factor impacting survival of a population, or a certain part of a population, environmental variables can also play a huge role. Either by releasing a segment of the population from the limting factors creating density dependence, or by making the limiting factors more limiting, or adding additional limitations. This coudl be done by providing additional food, or additional shelter or by introducting new predators, removing shelter or adding new chemicals into the environment that limit growth or survival. These relationships have been examined in many invertebrates, but species with longer life spans can have similar mechanisms but they are more difficult to tease apart. Amphibians provide a good vertebrate model organism because they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages (eggs [@Vonesh2002] (aquatic alrval and terrestrial juvenile stages [@Altwegg2003] (juvenile terestrial stage [@Harper2007] but not often in differening habitat conditions. Though Patrick et al [-@Patrick2008] did exampine habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and incuding density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
+Density dependence is important in understanding the population dynamics of a species. While there are some exceptions (the Allee effect) where a minimum viable population is important, often lower density populations have higher individual survival. Rarely is density dependence the only factor impacting survival of a population, or a certain demographic of a population, environmental variables can also play a huge role. Ultraviolet radiation been shown to impact density dependence in frogs, by reducing the survival of individuals during their larval stage, and then reducing density dependence for later life stages [@Blaustein2003]. Environmental constraints can impact population dynamics by releasing a segment of the population from the limiting factors creating density dependence, or by making the limiting factors more limiting, or adding additional limitations. The introduction of new chemicals can limit growth at certain life phases, but some organisms are able to overcome these limitations in one life phase by growing more in a later phase [@Boone2005]. These relationships have been examined in many invertebrates, but species with longer life spans can have similar mechanisms but they are more difficult to tease apart. Amphibians provide a good vertebrate model organism because they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages [eggs @Vonesh2002; aquatic larval and terrestrial juvenile stages @Altwegg2003; juvenile terrestrial stages @Harper2007] but not often in differentiating habitat conditions. Though Patrick et al [-@Patrick2008] explained habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and including density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
 
-We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress (CITATION). 
-
-UV impacts on density dependence [@Blaustein2003]
-
-overcoming density depenedce and insecticides [@Boone2005]
+We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress [@Didham2007]. 
 
 ## Experimental Design
 
-We created four rafts of mesocosms to be deployed at Woolsey Wet Prarie, a local restored wetland in Fayetteville, AR. TWo rafts were deployed in the restored wetland portion of Woolsey, and two in the farm pond portion of woolsey. Each raft in the pond habitat was given fescue grass (a non-native grass that grows around the ponds) and the restored wetland areas were given native prarie grass (collected from the restored area). The following densities were repeated across the two rafts(1,3,6,21,24,48 tadpoles). We selected these two plant communities to see if the non-native fescue grass has a different impact on tadpole density then the native prarie grass. We choose densities across a wide range (1-48) to ensure that we picked densites extreme enough to be able to determine if there are density dependence effects. 
+We created four rafts of mesocosms to be deployed at Woolsey Wet Prarie, a local restored wetland in Fayetteville, AR. Part of Woolsey Wet Prairie has been restored as part of a wetland mitigation project, and the rest is still in fescue, a result of the grazing that used to occur there. Ponds are scattered throughout the property. Two rafts were deployed in the restored wetland portion of Woolsey, and two in the unrestored portion in a farm pond. Each raft in the unrestored pond habitat was given fescue grass (*Fescue* spp, a non-native grass that grows around the ponds) and the restored wetland areas were given native grass (collected from the restored area). The following densities were repeated across the two rafts (1,3,6,21,24,48 tadpoles). We selected these two plant communities to see if the non-native fescue grass has a different impact on tadpole density then the native prairie grass. We choose densities across a wide range (1-48) to ensure that we picked densities extreme enough to be able to determine if there are density dependence effects. 
 
-Our responses are both survival and growth. To measure survival the mesocosms are checked at regular intervals and individuals in each mesocosm are counted. Growth was measured by assessing the size and weight of tadpoles at regular intervals. We predict that there will be density dependence, and that fescue grass will have more negative density dependence then prarie grass because it exudes chemicals which impact tadpoles. We predict that tadpoles will grow better and be less susceptible to density dependence in teh restored wetladn then the farm pond. 
+Our responses are survival and growth. To measure survival the mesocosms are checked at regular intervals and individuals in each mesocosm are counted. Growth was measured by assessing the size and weight of tadpoles at regular intervals. We predict that there will be density dependence, and that fescue grass will have more negative density dependence then prairie grass because it exudes chemicals which impact tadpoles. We predict that tadpoles will grow better and be less susceptible to density dependence in the restored wetland then the farm pond. 
 
 ## Model Description
 
 We were given some possible data to use in our model and used the script provided by Dr. Willson to obtain the gamma and density dependent scaling factor for each habitat type. We did this by varying the d and gamma values across a wide range, comparing the line to the possible values and finding the combination of values which had the lowest residuals (straight line distance along the y axis). 
 
-```{r results='asis', echo=FALSE}
+
+
+I used these values in the time series model to look at the impacts of these variables on population growth as a whole. Our model is a time series model and allows a parameter in the matrix to change with each time step. We are allowing the Fecundity of adults parameter to vary, which is a function of the number of tadpoles, their survival and the number of adults. 
+
+
+## Results
+
+```{r results='asis', echo=FALSE, message=FALSE, warning=FALSE}
 library(xtable)
-header <- c("Variable","pond","prairie")
+library(gridExtra)
+library(ggplot2)
+header <- c("Variable","Farm Pond","Restored Prairie")
 dd <- c("density dependent scaling factor",0.0059059, 0.007007007)
 gamma <- c("gamma", 1.20, 0.94)
 
 df <- rbind(dd, gamma)
 colnames(df) <- header
-
-print(xtable(df, comment=FALSE,caption="Results from Possible Data Model"), comment=FALSE, caption.placement="top")
+row.names(df) <- NULL
+print(xtable(df, comment=FALSE,caption="Results from Possible Data Model", rownames=FALSE), include.rownames=FALSE,comment=FALSE, caption.placement="top")
 
 ```
 
-I used these values in the time series model to look at the impacts of these variables on population growth as a whole. Our model is a time series model and allows a parameter in the matrix to change with each time step. We are allowing the Fecundity of adults paramter to vary, which is a function of the number of tadpoles, their survival and the number of adults. 
+Based on the analysis we covered in lab we determined our density dependent scaling factors and gamma values for both habitats (Table 1). Gamma less then 1 is under compensating and Gamma greater then 1 is over compensating for density dependence. Our pond tadpoles are slightly over compensating and the prairie slightly under compensating for density dependence. The density dependent factors vary between the two habitat types, with large values having a strong impact on the end population size. The results of these possible data show a stronger impact on density dependence from the farm pond than the prairie habitat. Though density dependence is playing a role in both systems. 
 
-
-## Results
-
-## Discussion
-
-## Figures
 
 ```{r, echo=FALSE}
 phi = 5000
@@ -78,93 +77,13 @@ NGr[,t] <- newN
 }
 
 
-####
-
-## Sensativity
-
-####
-
-
-phi = 5000
-se = .6
-sm = .2
-sj = .2
-sa = seq(0,1,by=.01)
-stmax = .8
-p = .5
-d = .0007007007
-gamma = .94
-tmax = 1000
-
-mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
-
-NGr <- matrix(nrow=2,ncol=tmax)
-NGr[,1] <- 1
-
-savadGr <- matrix(ncol=2, nrow=length(sa))
-savadGr[,1] <- sa
-
-for(i in 1:length(sa)){
-	for(t in 2:tmax){
-		tt = NGr[2,t-1] * p * phi * se
-		st = (stmax)/((1+d*tt)^gamma)
-		ft = p * phi * se * st * sm
-		mat <- matrix(c(0,sj,ft,sa[i]),ncol=2, nrow=2)
-		newN <- mat %*% NGr[,t-1]
-		NGr[,t] <- newN
-	}
-savadGr[i,2] <- newN[2,]
-}
+Gr <- as.data.frame(matrix(ncol=2, nrow=200))
+Gr[,1] <- seq(1:200)
+Gr[,2] <- NGr[2,]
+Gr[,3] <- "Prairie Grass"
+colnames(Gr) <- c("time","population","group")
 
 
-
-
-###
-
-## egg survival
-
-###
-
-
-phi = 5000
-se = seq(0,1,by=.01)
-sm = .2
-sj = .2
-sa = .75
-stmax = .8
-p = .5
-d = .0007007007
-gamma = .94
-tmax = 1000
-
-mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
-
-NGr <- matrix(nrow=2,ncol=tmax)
-NGr[,1] <- 1
-
-saveggGr <- matrix(ncol=2, nrow=length(se))
-saveggGr[,1] <- se
-
-for(i in 1:length(se)){
-	for(t in 2:tmax){
-		tt = NGr[2,t-1] * p * phi * se[i]
-		st = (stmax)/((1+d*tt)^gamma)
-		ft = p * phi * se[i] * st * sm
-		mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
-		newN <- mat %*% NGr[,t-1]
-		NGr[,t] <- newN
-	}
-saveggGr[i,2] <- newN[2,]
-}
-
-
-
-
-```
-
-
-
-```{r, echo=FALSE}
 phi = 5000
 se = .6
 sm = .2
@@ -190,6 +109,116 @@ newN <- mat %*% NPo[,t-1]
 NPo[,t] <- newN
 }
 
+Po <- as.data.frame(matrix(ncol=2, nrow=200))
+Po[,1] <- seq(1:200)
+Po[,2] <- NPo[2,]
+Po[,3] <- "Farm Pond"
+colnames(Po) <- c("time","population","group")
+
+dat <- rbind(Gr, Po)
+
+```
+
+```{r, echo=FALSE, fig.height=3, messag=FALSE, warning=FALSE}
+
+
+ggplot()+
+  geom_line(data=dat, aes(x=time, y=population, group=group, col=group))+
+  ylab("population size")
+
+```
+**Figure 1 - Our initial population model using the parameters given to us in class**
+\newpage
+Figure 1 shows the higher ending population size in the Prairie Grass habitat with an ending population size of ```r max(dat[dat$group=="Prairie Grass",]$population)``` and ```r max(dat[dat$group=="Farm Pond",]$population)``` in the Farm Pond. The 95% confidence intervals of our initial survival percentages increase as density increases, suggesting a lack of heterozygasticity in the data and they overlap between the two groups, suggesting that these differences are not significant. I did not compute the 95% confidence intervals for our model predictions, but they likely have the same issues as the underlying data. This is hypothesized data from an experiment though, so this kind of variation might not be unexpected.  
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+####
+
+## Sensativity
+
+####
+
+
+phi = 5000
+se = .6
+sm = .2
+sj = .2
+sa = seq(0,1,by=.01)
+stmax = .8
+p = .5
+d = .0007007007
+gamma = .94
+tmax = 1000
+
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+
+NGr <- matrix(nrow=2,ncol=tmax)
+NGr[,1] <- 1
+
+savadGr <- as.data.frame(matrix(ncol=3, nrow=length(sa)))
+savadGr[,1] <- sa
+
+for(i in 1:length(sa)){
+  for(t in 2:tmax){
+		tt = NGr[2,t-1] * p * phi * se
+		st = (stmax)/((1+d*tt)^gamma)
+		ft = p * phi * se * st * sm
+		mat <- matrix(c(0,sj,ft,sa[i]),ncol=2, nrow=2)
+		newN <- mat %*% NGr[,t-1]
+		NGr[,t] <- newN
+	}
+savadGr[i,2] <- newN[2,]
+}
+
+savadGr[,3] <- "Prairie Grass"
+
+
+###
+
+## egg survival
+
+###
+
+
+phi = 5000
+se = seq(0,1,by=.01)
+sm = .2
+sj = .2
+sa = .75
+stmax = .8
+p = .5
+d = .0007007007
+gamma = .94
+tmax = 1000
+
+mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+
+NGr <- matrix(nrow=2,ncol=tmax)
+NGr[,1] <- 1
+
+saveggGr <- as.data.frame(matrix(ncol=3, nrow=length(se)))
+saveggGr[,1] <- se
+
+for(i in 1:length(se)){
+	for(t in 2:tmax){
+		tt = NGr[2,t-1] * p * phi * se[i]
+		st = (stmax)/((1+d*tt)^gamma)
+		ft = p * phi * se[i] * st * sm
+		mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
+		newN <- mat %*% NGr[,t-1]
+		NGr[,t] <- newN
+	}
+saveggGr[i,2] <- newN[2,]
+}
+
+
+saveggGr[,3] <- "Prairie Grass"
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
 
 ####
 
@@ -214,7 +243,7 @@ mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
 NPo <- matrix(nrow=2,ncol=tmax)
 NPo[,1] <- 1
 
-savadPo <- matrix(ncol=2, nrow=length(sa))
+savadPo <- as.data.frame(matrix(ncol=3, nrow=length(sa)))
 savadPo[,1] <- sa
 
 for(i in 1:length(sa)){
@@ -229,6 +258,7 @@ for(i in 1:length(sa)){
 savadPo[i,2] <- newN[2,]
 }
 
+savadPo[,3] <- "Farm Pond"
 
 
 
@@ -255,7 +285,7 @@ mat <- matrix(c(0,sj,ft,sa),ncol=2, nrow=2)
 NPo <- matrix(nrow=2,ncol=tmax)
 NPo[,1] <- 1
 
-saveggPo <- matrix(ncol=2, nrow=length(se))
+saveggPo <- as.data.frame(matrix(ncol=3, nrow=length(se)))
 saveggPo[,1] <- se
 
 for(i in 1:length(se)){
@@ -270,28 +300,65 @@ for(i in 1:length(se)){
 saveggPo[i,2] <- newN[2,]
 }
 
-
-
+saveggPo[,3] <- "Farm Pond"
 
 
 ```
 
-```{r, echo=FALSE, fig.height=4}
-plot(seq(1:tmax), NGr[2,], main="initial model", xlab="time", ylab="population size", col="black")
-points(seq(1:tmax),NPo[2,], col="red")
+
+The impacts of a density dependence scaling factor and gamma are not equally felt by each demographic in a population. In Figure 2 we examine the impact of these values on the survival off eggs and adults. Figure 2a (egg survival) shows similar patterns to Figure 1, with the farm pond have lower resulting population ```r max(saveggGr[,2])``` compared with the restored prairie ```r max(saveggPo[,2])```.  
+
+```{r, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
+
+
+
+
+eggs <- as.data.frame(rbind(saveggGr, saveggPo))
+colnames(eggs) <- c("time", "population","group")
+ads <- as.data.frame(rbind(savadGr, savadPo))
+colnames(ads) <- c("time", "population","group")
+egg <- ggplot()+
+      geom_line(data=eggs, aes(x=time, y=population, group=group, colour=group),lwd=3)+
+      xlab("percent survival of eggs")+
+      theme(legend.position="none")
+
+ad <- ggplot()+
+      geom_line(data=ads, aes(x=time, y=population, group=group, colour=group), lwd=3)+
+      xlab("percent survival of adults")+
+      theme(legend.position="top")
+
+grid.arrange(egg, ad)
 ```
 
-**Figure 1 - Our initial population model using the parameters given to us in class**
+**Figure 2  - Sensativity Analysis of egg and adult survival in each habitat type**
 
-```{r, echo=FALSE, fig.height=4}
-par(mfrow=c(1,2))
-plot(saveggGr,  xlab="survival of eggs", ylab="population size")
-points(saveggPo, col="purple")
-plot(savadGr,  xlab="survival of adults", ylab="population size", ylim=c(0,10000))
-points(savadPo, col="purple")
-```
+## Discussion
 
-**Figure  - Sensativity Analysis of egg and adult survival in each habitat type (y scale on adult graph shortened to allow for visual interpretation of results**
+
+Mechanisms which could impact the effects we observed
+
+chemicals could interfer with survival and growth
+differences in available food resources
+one habitat is mroe consistent temperature allowing them to expend less energy on thermoregulation
+
+Why might crawfish frogs be similar/different then other frogs?
+
+Crawfish frogs are more specialized then many frog species, living in crawfish burrows during part of the year and relying on wet prairie wetlands for breeding. Because of this specialization they might be limited by factors that would not limit a more general frog, like a southern leopard frog, which overlaps in habitat with the crawfish frog, but not completely. 
+
+What implications do our results have for crawfish frog conservation?
+
+If prairie grass areas are able to support higher populations of crawfish frogs then work should be done to restore the rest of Woolsey Wet Prairie if the objective is to increase the population of crawfish frogs. Because of their unique biology in also needing conicident terrestrial habtiats with crawfish burrows special considedration woudl need to be made tohow the property shoudl be restored and if efforts should be put forth to protect adjacent properties which may serve as non-breeding habitat. 
+
+What are our studies limitations?
+
+The biggest limitation is the covariation of the vegetation type with the habitat type, which prevents us from being able to differentiate between the two variables. Sample size may also be limting. THe hypothesized data has fairly large amoutn of variation, which might be dampened by a larger sample size, or by the real data when it is collected in the coming months. 
+
+What would be an interesting next question?
+
+Then simplest next step would be to do a completely factoral design and include habitat type and vegetation type as two seperate covariates. As the study is set up right now the two variables are co-varying, which makes determing if the response is to the habitat or the vegetation impossible. It would also be interesting to add in additional treatments, such as increased temperature or the introduction of fertilizer or other pollutant to see if they impact density. Both would be future risks at Woolsey, between climate change and the increasing urbanization of the surrounding landscape, and would not be unique challenges to crawfish frogs across their range, so would be additionally helpful for crawfish frog conservation. 
+
+
+
 
 ## References
 
