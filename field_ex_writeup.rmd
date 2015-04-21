@@ -2,30 +2,29 @@
 bibliography: ex_writeup.bib
 csl: ecology.csl
 output: pdf_document
+header-includes:
+  - \setlength\parindent{24pt}
+linestretch: 1.5
 ---
 ## Implications of habitat-mediated density dependence in Crawfish Frogs (*Lithobates areolatus*)
 
-## Auriel M.V. Fournier
-## Population Ecology
-## Spring 2015
+## Auriel M.V. Fournier / Population Ecology / Spring 2015
 
 ## Background
 
-Density dependence is important in understanding the population dynamics of a species. While there are some exceptions (the Allee effect) where a minimum viable population is important, often lower density populations have higher individual survival. Rarely is density dependence the only factor impacting survival of a population, or a certain demographic of a population, environmental variables can also play a huge role. Ultraviolet radiation been shown to impact density dependence in frogs, by reducing the survival of individuals during their larval stage, and then reducing density dependence for later life stages [@Blaustein2003]. Environmental constraints can impact population dynamics by releasing a segment of the population from the limiting factors creating density dependence, or by making the limiting factors more limiting, or adding additional limitations. The introduction of new chemicals can limit growth at certain life phases, but some organisms are able to overcome these limitations in one life phase by growing more in a later phase [@Boone2005]. These relationships have been examined in many invertebrates, but species with longer life spans can have similar mechanisms but they are more difficult to tease apart. Amphibians provide a good vertebrate model organism because they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages [eggs @Vonesh2002; aquatic larval and terrestrial juvenile stages @Altwegg2003; juvenile terrestrial stages @Harper2007] but not often in differentiating habitat conditions. Though Patrick et al [-@Patrick2008] explained habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and including density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. 
+Density dependence is important in understanding the population dynamics of a species. While there are some exceptions (the Allee effect) where a minimum viable population is important, often lower density populations have higher individual survival. Rarely is density dependence the only factor impacting survival of a population, or a certain demographic of a population, environmental variables can also play a huge role. Ultraviolet radiation been shown to impact density dependence in frogs, by reducing the survival of individuals during their larval stage, and then reducing density dependence for later life stages [@Blaustein2003]. Environmental constraints can impact population dynamics by releasing a segment of the population from the limiting factors creating density dependence, or by making the limiting factors more limiting, or adding additional limitations. The introduction of new chemicals can limit growth at certain life phases, but some organisms are able to overcome these limitations in one life phase by growing more in a later phase [@Boone2005]. 
 
-We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress [@Didham2007]. 
+These relationships have been examined in many invertebrates, but species with longer life spans can have similar mechanisms but they are more difficult to tease apart. Amphibians provide a good vertebrate model organism because they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages [eggs @Vonesh2002; aquatic larval and terrestrial juvenile stages @Altwegg2003; juvenile terrestrial stages @Harper2007] but not often in differentiating habitat conditions. Though Patrick et al [-@Patrick2008] explained habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and including density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. We have choosen the Crawfish Frog as our study organism (*Lithobates areolatus*). They are are a wetland dependent species during the breeding season that later retreat to more terrestrial habitats. We are looking at a variety of densities and four different habitat/vegetation scenarios to examine the role of restored versus unrestored wetland habitats and native vs invasive (fescue) vegetation. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress [@Didham2007]. 
 
 ## Experimental Design
 
 We created four rafts of mesocosms to be deployed at Woolsey Wet Prarie, a local restored wetland in Fayetteville, AR. Part of Woolsey Wet Prairie has been restored as part of a wetland mitigation project, and the rest is still in fescue, a result of the grazing that used to occur there. Ponds are scattered throughout the property. Two rafts were deployed in the restored wetland portion of Woolsey, and two in the unrestored portion in a farm pond. Each raft in the unrestored pond habitat was given fescue grass (*Fescue* spp, a non-native grass that grows around the ponds) and the restored wetland areas were given native grass (collected from the restored area). The following densities were repeated across the two rafts (1,3,6,21,24,48 tadpoles). We selected these two plant communities to see if the non-native fescue grass has a different impact on tadpole density then the native prairie grass. We choose densities across a wide range (1-48) to ensure that we picked densities extreme enough to be able to determine if there are density dependence effects. 
 
-Our responses are survival and growth. To measure survival the mesocosms are checked at regular intervals and individuals in each mesocosm are counted. Growth was measured by assessing the size and weight of tadpoles at regular intervals. We predict that there will be density dependence, and that fescue grass will have more negative density dependence then prairie grass because it exudes chemicals which impact tadpoles. We predict that tadpoles will grow better and be less susceptible to density dependence in the restored wetland then the farm pond. 
+Our responses are survival and growth. To measure survival the mesocosms were checked at regular intervals and individuals in each mesocosm were counted. Growth was measured by assessing the size and weight of tadpoles at regular intervals. We predict that there will be density dependence, and that fescue grass will have more negative density dependence then prairie grass because it exudes chemicals which impact tadpoles. We predict that tadpoles will grow better and be less susceptible to density dependence in the restored wetland then the farm pond. 
 
 ## Model Description
 
-We were given some possible data to use in our model and used the script provided by Dr. Willson to obtain the gamma and density dependent scaling factor for each habitat type. We did this by varying the d and gamma values across a wide range, comparing the line to the possible values and finding the combination of values which had the lowest residuals (straight line distance along the y axis). 
-
-
+I was given possible data to use in our model and used the script provided by Dr. Willson to obtain the gamma and density dependent scaling factor for each habitat type. We did this by varying the d and gamma values across a wide range, comparing the line to the possible values and finding the combination of values which had the lowest residuals (straight line distance along the y axis). 
 
 I used these values in the time series model to look at the impacts of these variables on population growth as a whole. Our model is a time series model and allows a parameter in the matrix to change with each time step. We are allowing the Fecundity of adults parameter to vary, which is a function of the number of tadpoles, their survival and the number of adults. 
 
@@ -120,15 +119,17 @@ dat <- rbind(Gr, Po)
 ```
 
 ```{r, echo=FALSE, fig.height=3, messag=FALSE, warning=FALSE}
-
+cpPalette <- c("#6600FF","#FF9900")
 
 ggplot()+
-  geom_line(data=dat, aes(x=time, y=population, group=group, col=group))+
+  geom_line(data=dat, aes(x=time, y=population, group=group, col=group),lwd=2)+
+  scale_colour_manual(values=cpPalette)+
   ylab("population size")
 
 ```
+
 **Figure 1 - Our initial population model using the parameters given to us in class**
-\newpage
+
 Figure 1 shows the higher ending population size in the Prairie Grass habitat with an ending population size of ```r max(dat[dat$group=="Prairie Grass",]$population)``` and ```r max(dat[dat$group=="Farm Pond",]$population)``` in the Farm Pond. The 95% confidence intervals of our initial survival percentages increase as density increases, suggesting a lack of heterozygasticity in the data and they overlap between the two groups, suggesting that these differences are not significant. I did not compute the 95% confidence intervals for our model predictions, but they likely have the same issues as the underlying data. This is hypothesized data from an experiment though, so this kind of variation might not be unexpected.  
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -311,53 +312,38 @@ The impacts of a density dependence scaling factor and gamma are not equally fel
 ```{r, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
 
 
-
+cpPalette <- c("#6600FF","#FF9900")
 
 eggs <- as.data.frame(rbind(saveggGr, saveggPo))
 colnames(eggs) <- c("time", "population","group")
 ads <- as.data.frame(rbind(savadGr, savadPo))
 colnames(ads) <- c("time", "population","group")
 egg <- ggplot()+
-      geom_line(data=eggs, aes(x=time, y=population, group=group, colour=group),lwd=3)+
+      geom_line(data=eggs, aes(x=time, y=population, group=group, colour=group),lwd=2)+
       xlab("percent survival of eggs")+
+    scale_colour_manual(values=cpPalette)+
       theme(legend.position="none")
 
 ad <- ggplot()+
-      geom_line(data=ads, aes(x=time, y=population, group=group, colour=group), lwd=3)+
+      geom_line(data=ads, aes(x=time, y=population, group=group, colour=group), lwd=2)+
       xlab("percent survival of adults")+
+  scale_colour_manual(values=cpPalette)+
       theme(legend.position="top")
 
 grid.arrange(egg, ad)
 ```
 
-**Figure 2  - Sensativity Analysis of egg and adult survival in each habitat type**
+**Figure 2  - Sensativity analysis of egg and adult survival in both habitat types**
 
 ## Discussion
 
+Why we are seeing these differences between the two habitats require further investigation into the differences in temperature, food availability and other factors that may have impacted Crawfish frog tadpole survival. There are several things which may have been at play. The first and perhaps most obvious when standing on the site, is the difference in vegetation (which was replicated in the mesocosms). Fescue is an invasive grass, and may not have provided the diversity of food of native prairie grass. Some invasive grasses also exude chemicals to reduce competition with other grasses, if the cut grass is able to continue to exude these chemicals that could also have an impact on the frogs, or the frogs food. Farm ponds generally have less vegetation, at least above water, this could impact the temperature of the water (unshaded water might fluctuate more frequently and reach higher highs). These swings in temperature may have impacted the tadpoles development and survival, or had an impact on available food resources. Because of the presence of the mesocosm we can likely rule out differences in predators between the two sights since, to our knowledge, no predation (other then by their fellow tadpoles) occurred. In the wild though differences in type and density of predator could also play a role. 
 
-Mechanisms which could impact the effects we observed
+Crawfish frogs are more specialized then many frog species, living in crawfish burrows during part of the year and relying on wet prairie wetlands for breeding [@Hoffman2010]. Because of this specialization they might be limited by factors that would not limit a more general frog, like a southern leopard frog, which overlaps in habitat with the crawfish frog, but not completely. This should be taken into consideration before trying to extrapolate these findings beyond crawfish frogs. Since the prairie grass areas are able to support higher populations of crawfish frogs then work should be done to restore the rest of Woolsey Wet Prairie if the objective is to increase the population of crawfish frogs. Because of their unique biology in also needing coincident terrestrial habitats with crawfish burrows special consideration would need to be made to how the property should be restored and if efforts should be put forth to protect adjacent properties which may serve as non-breeding habitat [@Hoffman2010]. Work done using drift fences to try and capture Crawfish Frogs has shown that they will often wait at these barriers all night before returning to the wetland [@Heemeyer2010]. This would have large implications for connectivity between areas in the face of development. 
 
-chemicals could interfer with survival and growth
-differences in available food resources
-one habitat is mroe consistent temperature allowing them to expend less energy on thermoregulation
+The biggest limitation is the co-variation of the vegetation type with the habitat type, which prevents us from being able to differentiate between the two variables. Sample size may also be limiting. The hypothesized data has fairly large amount of variation, which might be dampened by a larger sample size, or by the real data when it is collected in the coming months. Then simplest next step would be to do a completely factorial design and include habitat type and vegetation type as two separate covariates. As the study is set up right now the two variables are co-varying, which makes determining if the response is to the habitat or the vegetation impossible. It would also be interesting to add in additional treatments, such as increased temperature or the introduction of fertilizer or other pollutant to see if they impact density. Both would be future risks at Woolsey, between climate change and the increasing urbanization of the surrounding landscape, and would not be unique challenges to crawfish frogs across their range, so would be additionally helpful for crawfish frog conservation.
 
-Why might crawfish frogs be similar/different then other frogs?
-
-Crawfish frogs are more specialized then many frog species, living in crawfish burrows during part of the year and relying on wet prairie wetlands for breeding. Because of this specialization they might be limited by factors that would not limit a more general frog, like a southern leopard frog, which overlaps in habitat with the crawfish frog, but not completely. 
-
-What implications do our results have for crawfish frog conservation?
-
-If prairie grass areas are able to support higher populations of crawfish frogs then work should be done to restore the rest of Woolsey Wet Prairie if the objective is to increase the population of crawfish frogs. Because of their unique biology in also needing conicident terrestrial habtiats with crawfish burrows special considedration woudl need to be made tohow the property shoudl be restored and if efforts should be put forth to protect adjacent properties which may serve as non-breeding habitat. 
-
-What are our studies limitations?
-
-The biggest limitation is the covariation of the vegetation type with the habitat type, which prevents us from being able to differentiate between the two variables. Sample size may also be limting. THe hypothesized data has fairly large amoutn of variation, which might be dampened by a larger sample size, or by the real data when it is collected in the coming months. 
-
-What would be an interesting next question?
-
-Then simplest next step would be to do a completely factoral design and include habitat type and vegetation type as two seperate covariates. As the study is set up right now the two variables are co-varying, which makes determing if the response is to the habitat or the vegetation impossible. It would also be interesting to add in additional treatments, such as increased temperature or the introduction of fertilizer or other pollutant to see if they impact density. Both would be future risks at Woolsey, between climate change and the increasing urbanization of the surrounding landscape, and would not be unique challenges to crawfish frogs across their range, so would be additionally helpful for crawfish frog conservation. 
-
-
+This is an exciting first look at the impacts of density dependence on Crawfish Frog population dynamics. With further work it can produce useful metrics to inform Crawfish Frog conservation and wetland management and help set realistic goals for population objectives. Our data suggest that there is density dependence among these frogs, which must be taken into account when managing and studying the population in the future. 
 
 
 ## References
