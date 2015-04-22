@@ -6,7 +6,7 @@ header-includes:
   - \setlength\parindent{24pt}
 linestretch: 1.5
 ---
-## Implications of habitat-mediated density dependence in Crawfish Frogs (*Lithobates areolatus*)
+## Implications of habitat-mediated density dependence in crawfish frogs (*Lithobates areolatus*)
 
 ## Auriel M.V. Fournier / Population Ecology / Spring 2015
 
@@ -14,7 +14,7 @@ linestretch: 1.5
 
 Density dependence is important in understanding the population dynamics of species. While there are exceptions (the Allee effect) where a minimum viable population is important, lower density populations often have higher individual survival. Rarely is density dependence the only factor impacting survival of a population, or a certain demographic of a population, environmental variables can also play a role. Ultraviolet radiation been shown to impact density dependence in frogs, by reducing the survival of individuals during their larval stage which reduces density dependence in later life stages [@Blaustein2003]. Environmental constraints can impact population dynamics by releasing a segment of the population from the limiting factors creating density dependence, or by making the limiting factors more limiting, or adding additional limitations. The introduction of new chemicals can limit growth at certain life phases, but some organisms are able to overcome these limitations in one phase by growing more in a later one [@Boone2005]. 
 
-Density dependent relationships have been examined in many invertebrates. Species with longer life spans can have similar mechanisms but they are more difficult to tease apart. Amphibians provide a good vertebrate model organism because they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages [eggs @Vonesh2002; aquatic larval and terrestrial juvenile stages @Altwegg2003; juvenile terrestrial stages @Harper2007] but not often in differentiating habitat conditions. Patrick et al [-@Patrick2008] explained habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and including density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. We have choosen the Crawfish Frog as our study organism (*Lithobates areolatus*). They are are a wetland dependent species during the breeding season and retreat to more terrestrial habitats the rest of the year. We are looking at a range of densities and two different habitattreatments to examine the role of restored versus unrestored wetland habitats. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress [@Didham2007]. 
+Density dependent relationships have been examined in many invertebrates. Species with longer life spans can have similar mechanisms but they are more difficult to tease apart. Amphibians provide a good vertebrate model organism because they have a fairly quick life cycle and the parts of their life cycle where they are thought to experience density dependence are fairly short (several weeks/months) instead of years as in larger longer lived organisms or organisms with different reproductive strategies. These ideas have been examined in several life stages [eggs @Vonesh2002; aquatic larval and terrestrial juvenile stages @Altwegg2003; juvenile terrestrial stages @Harper2007] but not often in differentiating habitat conditions. Patrick et al [-@Patrick2008] explained habitat and density dependence in wood frogs (*Rana sylvatica*) in relation to environmental covariates which could play a role by limiting growth or resources and including density dependence at densities where it would not occur under 'ideal' or 'typical' conditions. We have choosen the crawfish frog as our study organism (*Lithobates areolatus*). They are are a wetland dependent species during the breeding season and retreat to more terrestrial habitats the rest of the year. We are looking at a range of densities and two different habitattreatments to examine the role of restored versus unrestored wetland habitats. Non-restored habitats or those with non-native vegetation might not provide sufficient resources for the individuals or may create a more stressful environment by having different chemical or other triggers of stress [@Didham2007]. 
 
 ## Experimental Design
 
@@ -220,7 +220,7 @@ saveggGr[,3] <- "Prairie Grass"
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
-
+options(scipen=999)
 ####
 
 ## Sensativity
@@ -307,7 +307,7 @@ saveggPo[,3] <- "Farm Pond"
 ```
 
 
-The impacts of a *d* and gamma are not equally felt by each part of the population. In Figure 2 we examine the impact of these values on the survival off eggs and adults. Figure 2a (egg survival) shows similar patterns to Figure 1, with the farm pond having lower population ```r round(max(saveggGr[,2]),2)``` compared with restored prairie ```r round(max(saveggPo[,2]),2)```. The impact on adult survival is difficult to assess in the full graph, but once the axis are clipped there is a difference. The prarie grass habitat has a greater population size then the farm pond, and it reaches very high - ```r round(max(savadGr[,2]),2)``` - population densities when adult survival is above 90%. The farm pond does not have such a dramatic response - ```r round(max(saveggPo[,2]),2)```. 
+The impacts of a *d* and gamma are not equally felt by each part of the population. In Figure 2 we examine the impact of these values on the survival off eggs and adults. Figure 2a (egg survival) shows similar patterns to Figure 1, with the farm pond having lower population ```r round(max(saveggGr[,2]),2)``` compared with restored prairie ```r round(max(saveggPo[,2]),2)```. The impact on adult survival is difficult to assess in the full graph, but once the axis are clipped there is a difference. The prarie grass habitat has a greater population size then the farm pond, and it reaches very high - ```r  round(max(savadGr[,2]),2)``` - population densities when adult survival is above 90%. The farm pond does not have such a dramatic response - ```r round(max(saveggPo[,2]),2)```. 
 
 ```{r, echo=FALSE, fig.height=8, message=FALSE, warning=FALSE}
 
@@ -352,7 +352,7 @@ Crawfish frogs are more specialized then many frog species, living in crawfish b
 
 The biggest limitation of this study is co-variation of the vegetation type with the habitat type, which prevents us from being able to differentiate between the two variables. Sample size may also be limiting. The hypothesized data has fairly large amount of variation, which might be dampened by a larger sample size, or by the real data when it is collected in the coming months. The simplest next step would be to do a completely factorial design and include habitat type and vegetation type as two separate covariates. It would also be interesting to add in additional treatments, such as increased temperature or the introduction of fertilizer or other pollutant to see if they impact density. Both would be future risks at Woolsey, between climate change and the increasing urbanization of the surrounding landscape, and would not be unique challenges to crawfish frogs across their range, so would be additionally helpful for crawfish frog conservation.
 
-This is an exciting first look at the impacts of density dependence on Crawfish Frog population dynamics. With further work it can produce useful metrics to inform Crawfish Frog conservation and wetland management and help set realistic goals for population objectives. Our data suggest that there is density dependence among these frogs, which must be taken into account when managing and studying the population in the future. 
+This is an exciting first look at the impacts of density dependence on crawfish frog population dynamics. With further work it can produce useful metrics to inform crawfish frog conservation and wetland management and help set realistic goals for population objectives. Our data suggest that there is density dependence among these frogs, which must be taken into account when managing and studying the population in the future. 
 
 
 ## References
